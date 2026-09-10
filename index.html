@@ -84,7 +84,6 @@ header{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:
 .chat-widget{position:fixed;bottom:20px;left:20px;background:#0088cc;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:998;box-shadow:0 4px 15px rgba(0,136,204,.4);}
 .chat-widget i{width:26px;height:26px;color:#fff;}
 
-/* ===== HERO BANNER ===== */
 .hero-banner{position:relative;width:100%;min-height:320px;border-radius:16px;overflow:hidden;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;}
 .banner-bg{position:absolute;inset:0;z-index:1;}
 .banner-bg img{width:100%;height:100%;object-fit:cover;}
@@ -101,7 +100,6 @@ header{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:
 @keyframes floatDown{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(20px) rotate(3deg);}}
 .floating-img.fade-out{opacity:0;}
 
-/* ===== BANNER ADMIN ===== */
 .banner-admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;}
 .img-preview{margin-top:10px;min-height:100px;border:2px dashed rgba(255,255,255,0.1);border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:center;}
 .img-preview img{max-width:100%;max-height:150px;border-radius:8px;object-fit:contain;}
@@ -110,7 +108,6 @@ header{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:
 .floating-pair .remove-btn{background:#c62828;color:white;border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:1.1rem;}
 .pair-label{color:#888;font-size:0.8rem;min-width:25px;font-weight:bold;}
 
-/* ===== ADMIN PANEL ===== */
 .admin-wrapper{display:flex;min-height:70vh;gap:0;background:var(--dark);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.05);}
 .admin-sidebar{width:260px;background:var(--card);border-left:1px solid rgba(255,255,255,0.05);padding:1.5rem 0;display:flex;flex-direction:column;flex-shrink:0;transition:all 0.3s ease;}
 .sidebar-header{padding:0 1.5rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;}
@@ -161,7 +158,6 @@ header{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:
 .discount-card .discount-rate{font-size:.9rem;color:#aaa;margin:6px 0;}
 .loading-spinner{text-align:center;padding:3rem;color:#888;}
 
-/* ===== بخش‌های پنل مدیریت - فقط یکی نشون داده میشه ===== */
 .admin-panel-section{display:none !important;}
 .admin-panel-section.active{display:block !important;}
 
@@ -199,7 +195,6 @@ header{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:
 button,.btn-cat,.btn-sub-cat,.product-card{-webkit-tap-highlight-color:transparent;}
 button{min-height:40px;}
 
-/* ===== DARK/LIGHT MODE ===== */
 html.light{--dark:#f0f0f0;--card:#ffffff;--text:#111111;}
 html.light body{background:#f0f0f0;color:#111;}
 html.light header{background:#fff;border-bottom:2px solid var(--primary);}
@@ -791,7 +786,6 @@ function goShopWithCat(main){
   }, 50);
 }
 
-// ===== PRICING =====
 function calculateProductFinalPrice(liraPrice, shippingCost, profitPercent) {
   if (!liraPrice || liraPrice <= 0) return 0;
   const baseToman = liraPrice * globalLiraRate;
@@ -861,7 +855,7 @@ function renderProducts(list){
     const hasDiscount = p.discount && p.discount>0;
     const finalPrice = hasDiscount ? Math.round(p.price*(1-p.discount/100)) : p.price;
     let stockBadge = p.stock<=0 ? '<span class="stock-badge stock-out">ناموجود</span>' : (p.stock<=3 ? `<span class="stock-badge stock-low">فقط ${p.stock} عدد</span>` : '<span class="stock-badge stock-ok">موجود</span>');
-    return `<div class="product-card"><img src="${p.img}" onclick="openLightbox('${(p.img||'').replace(/'/g,"\\'")}')" onerror="this.src='https://placehold.co/150x150/16213e/aaa?text=FitForge'"><h3>${p.name}</h3>${stockBadge}${hasDiscount?`<div style="text-decoration:line-through;color:#888;font-size:.8rem">${p.price.toLocaleString()}</div>`:''}<div class="price">${finalPrice.toLocaleString()} تومان</div><div style="font-size:.7rem;color:#888;margin:4px 0;">🚚 ارسال: ${(p.shippingCost||0).toLocaleString()} تومان</div><button class="btn-add" ${p.stock<=0?'disabled':''} onclick="addToCart('${p.id}')">${p.stock<=0?'ناموجود':'🛒 افزودن'}</button></div>`;
+    return `<div class="product-card"><img src="${p.img}" onclick="openLightbox('${(p.img||'').replace(/'/g,"\\'")}')" onerror="this.src='https://placehold.co/150x150/16213e/aaa?text=FitForge'"><h3>${p.name}</h3>${stockBadge}${hasDiscount?`<div style="text-decoration:line-through;color:#888;font-size:.8rem">${p.price.toLocaleString()}</div>`:''}<div class="price">${finalPrice.toLocaleString()} تومان</div><button class="btn-add" ${p.stock<=0?'disabled':''} onclick="addToCart('${p.id}')">${p.stock<=0?'ناموجود':'🛒 افزودن'}</button></div>`;
   }).join('');
 }
 function renderPagination(totalPages){
@@ -889,14 +883,13 @@ function addToCart(id){
   toast('به سبد اضافه شد');
 }
 function renderCart(){
-  let html='', total=0, totalShipping=0;
+  let html='', total=0;
   cart.forEach((item,i)=>{
     html += `<p style="display:flex;justify-content:space-between;background:#1a1a2e;padding:.8rem;border-radius:6px;margin-bottom:.5rem;"><span>${i+1}. ${item.name}</span><span>${item.price.toLocaleString()} <button onclick="removeFromCart(${i})" style="background:none;border:none;color:#ff4d2e;cursor:pointer">✕</button></span></p>`;
     total += item.price;
-    totalShipping += item.shippingCost;
   });
   document.getElementById('cart-items-list').innerHTML = html || '<p style="text-align:center;color:#aaa">سبد خرید خالی است</p>';
-  document.getElementById('total-price').textContent = (total + totalShipping).toLocaleString();
+  document.getElementById('total-price').textContent = total.toLocaleString();
 }
 function removeFromCart(i){ cart.splice(i,1); document.getElementById('cart-count').textContent=cart.length; renderCart(); }
 function openCart(){document.getElementById('cart-modal').style.display='block';document.getElementById('step-1').style.display='block';document.getElementById('step-2').style.display='none';renderCart();}
@@ -936,13 +929,13 @@ async function finalizeOrder(platform){
   const baseTotal=cart.reduce((s,i)=>s+i.price,0);
   const shippingTotal=cart.reduce((s,i)=>s+(i.shippingCost||0),0);
   const discountAmount=Math.round(baseTotal*rate);
-  const finalTotal=baseTotal+shippingTotal-discountAmount;
+  const finalTotal=baseTotal-discountAmount;
   const now = new Date();
   const dateStr = `${now.getFullYear()-1979}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
   const randomNum = Math.floor(Math.random() * 900) + 100;
   const orderCode = `FIT-${dateStr}-${randomNum}`;
   let itemsList = cart.map((i, idx) => `${idx+1}. ${i.name} — ${i.price.toLocaleString()} تومان`).join('\n');
-  let msg = `🛒 سفارش جدید fitforge.ir\n📌 کد سفارش: ${orderCode}\n\n📦 اقلام:\n${itemsList}\n\n💰 جمع کل: ${baseTotal.toLocaleString()} تومان\n🚚 هزینه ارسال: ${shippingTotal.toLocaleString()} تومان\n`;
+  let msg = `🛒 سفارش جدید fitforge.ir\n📌 کد سفارش: ${orderCode}\n\n📦 اقلام:\n${itemsList}\n\n💰 جمع کل: ${baseTotal.toLocaleString()} تومان\n`;
   if(rate > 0) msg += `🎟️ کد تخفیف: ${code} (${discountAmount.toLocaleString()} تومان)\n`;
   msg += `✅ مبلغ نهایی: ${finalTotal.toLocaleString()} تومان\n\n👤 خریدار: ${name}\n📞 تماس: ${phone}\n🏙️ استان/شهر: ${province} / ${city}\n🏠 آدرس: ${addr}\n📮 کد پستی: ${zip}\n`;
   const enc = encodeURIComponent(msg);
@@ -963,7 +956,6 @@ async function finalizeOrder(platform){
   toast('سفارش ثبت شد! کد: ' + orderCode);
 }
 
-// ===== ADMIN =====
 function openAdminPin(){document.getElementById('admin-pin-modal').style.display='block';}
 function closeAdminPin(){document.getElementById('admin-pin-modal').style.display='none';document.getElementById('adminPinInput').value='';}
 function checkAdminPin(){
@@ -973,29 +965,20 @@ function checkAdminPin(){
 }
 
 function showAdminTab(tab){
-  // مخفی کردن همه بخش‌ها با style مستقیم
   document.querySelectorAll('.admin-panel-section').forEach(el => {
     el.classList.remove('active');
     el.style.display = 'none';
   });
-  
-  // نمایش بخش انتخاب شده
   const target = document.getElementById('admin-'+tab);
   if(target){
     target.classList.add('active');
     target.style.display = 'block';
   }
-  
-  // آپدیت ناوبری
   document.querySelectorAll('.admin-nav-item').forEach(el=>el.classList.remove('active'));
   const activeNav = document.querySelector(`.admin-nav-item[data-tab="${tab}"]`);
   if(activeNav) activeNav.classList.add('active');
-  
-  // آپدیت عنوان
   const titles={'dashboard':'📊 داشبورد','products':'📦 مدیریت محصولات','orders':'📋 سفارش‌ها','customers':'👥 مشتریان','discounts':'🎟️ تخفیف‌ها','banners':'🎨 بنرها','settings':'⚙️ تنظیمات'};
   document.getElementById('adminPageTitle').textContent = titles[tab] || tab;
-  
-  // بارگذاری داده‌ها
   switch(tab){
     case 'dashboard': renderDashboard();break;
     case 'products': renderAdminProducts();checkImportStatus();break;
@@ -1129,7 +1112,6 @@ async function renderOrders(){
         👤 ${o.name} — 📞 ${o.phone}<br>
         🏠 ${o.addr}<br>
         💰 ${o.finalTotal.toLocaleString()} تومان (${o.items.length} قلم)<br>
-        🚚 هزینه ارسال: ${(o.shippingTotal||0).toLocaleString()} تومان<br>
         <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
           <button class="btn-small btn-approve" onclick="setOrderStatus('${o.id}','approved')">✅ تایید و ثبت</button>
           <button class="btn-small btn-pending" onclick="setOrderStatus('${o.id}','pending')">⏳ در انتظار</button>
