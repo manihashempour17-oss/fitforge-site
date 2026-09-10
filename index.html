@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>fitforge.ir | فروشگاه</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Tahoma,sans-serif;}
+:root{--primary:#ff4d2e;--primary-dark:#d4341a;--dark:#0f0f1a;--card:#16213e;--text:#ffffff;}
+body{background:var(--dark);color:var(--text);line-height:1.6;padding-bottom:80px;}
+header{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:#1a1a2e;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--primary);}
+.logo{display:flex;align-items:center;gap:12px;font-size:1.5rem;font-weight:bold;color:var(--primary);cursor:pointer;}
+.nav-btns{display:flex;gap:.5rem;align-items:center;}
+.btn-nav{background:#333;padding:.6rem 1rem;border-radius:8px;color:white;border:none;cursor:pointer;font-weight:bold;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.btn-nav:hover{background:#444;}
+.insta-header-icon{width:38px;height:38px;border-radius:10px;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);transition:transform 0.2s;text-decoration:none;flex-shrink:0;}
+.insta-header-icon:hover{transform:scale(1.1);}
+.insta-header-icon img{width:100%;height:100%;object-fit:cover;}
+.insta-header-icon i{color:#fff;width:20px;height:20px;}
+.page{display:none;padding:2rem;max-width:1200px;margin:auto;}
+.active{display:block;animation:fadeIn .4s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{text-align:center;padding:2rem 1rem;}
+.shop-main-cats{display:flex;gap:.6rem;margin:1.5rem 0 1rem 0;overflow-x:auto;padding-bottom:5px;}
+.btn-cat{background:#222;color:white;border:1px solid #444;padding:.6rem 1.4rem;border-radius:8px;cursor:pointer;white-space:nowrap;font-weight:bold;}
+.btn-cat:hover,.btn-cat.active-cat{background:var(--primary);border-color:var(--primary);}
+.shop-sub-cats{display:flex;gap:.5rem;overflow-x:auto;padding:12px;background:#14142b;border-radius:10px;margin-bottom:2rem;flex-wrap:wrap;}
+.btn-sub-cat{background:#2a2a44;color:#ccc;border:1px solid #444;padding:.4rem 1.1rem;border-radius:20px;cursor:pointer;font-size:.85rem;white-space:nowrap;font-weight:bold;}
+.btn-sub-cat:hover,.btn-sub-cat.active-sub{background:#fff;color:#000;border-color:#fff;}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;}
+.product-card{background:var(--card);padding:1.2rem;border-radius:12px;text-align:center;border:1px solid #333;display:flex;flex-direction:column;align-items:center;}
+.product-card img{width:150px;height:150px;object-fit:contain;border-radius:8px;margin-bottom:10px;cursor:pointer;}
+.product-card h3{font-size:.95rem;margin-bottom:6px;}
+.price{font-weight:bold;margin-bottom:8px;}
+.stock-badge{font-size:.7rem;padding:2px 8px;border-radius:10px;margin-bottom:6px;display:inline-block;}
+.stock-ok{background:#1b5e20;color:#a5d6a7;}.stock-low{background:#e65100;color:#ffccbc;}.stock-out{background:#333;color:#aaa;}
+.btn-add{background:var(--primary);color:white;border:none;padding:.6rem;width:100%;border-radius:6px;cursor:pointer;font-weight:bold;margin-top:6px;}
+.btn-add:disabled{background:#444;cursor:not-allowed;}
+.cart-float{position:fixed;bottom:20px;right:20px;background:var(--primary);padding:1rem 1.5rem;border-radius:50px;cursor:pointer;z-index:999;font-weight:bold;box-shadow:0 4px 15px rgba(255,77,46,.4);}
+#cart-modal,#admin-pin-modal,#lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:1000;padding:2rem;overflow-y:auto;}
+.cart-content,.modal-box{max-width:550px;margin:auto;background:var(--card);padding:2rem;border-radius:15px;border:1px solid #444;}
+.form-group{margin-bottom:1rem;text-align:right;}
+.form-group label{display:block;margin-bottom:.4rem;font-size:.9rem;color:#ccc;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.7rem;border-radius:6px;border:1px solid #444;background:#1a1a2e;color:white;}
+.btn-full{width:100%;padding:.9rem;background:var(--primary);color:white;border:none;border-radius:8px;margin-top:8px;cursor:pointer;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-full.gray{background:#444;}
+.btn-full.green{background:#2e7d32;}
+.btn-full.whatsapp{background:#25D366;}
+.admin-product-row{background:var(--card);border:1px solid #333;border-radius:10px;padding:1rem;margin-bottom:.8rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;}
+.admin-product-row img{width:60px;height:60px;object-fit:contain;border-radius:6px;}
+.admin-product-row .info{flex:1;min-width:150px;}
+.admin-product-row .actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+.btn-small{padding:.4rem .8rem;border-radius:6px;border:none;cursor:pointer;font-size:.8rem;font-weight:bold;}
+.btn-edit{background:#2a2a44;color:#fff;}
+.btn-del{background:#c62828;color:#fff;}
+.btn-approve{background:#2e7d32;color:#fff;}
+.btn-pending{background:#f39c12;color:#fff;}
+.order-card{background:var(--card);border:1px solid #333;border-radius:10px;padding:1rem;margin-bottom:.8rem;}
+.order-status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:bold;}
+.status-approved{background:rgba(76,175,80,0.2);color:#4caf50;}
+.status-pending{background:rgba(243,156,18,0.2);color:#f39c12;}
+.status-cancelled{background:rgba(198,40,40,0.2);color:#ff6b6b;}
+.search-box{margin-bottom:1rem;}
+.search-box input{width:100%;padding:.8rem;border-radius:8px;border:1px solid #444;background:#1a1a2e;color:#fff;}
+.pin-input{width:180px;margin:1rem auto;display:block;text-align:center;font-size:24px;letter-spacing:10px;padding:12px;}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--primary);padding:.8rem 1.5rem;border-radius:10px;opacity:0;transition:.3s;z-index:2000;}
+.toast.show{opacity:1;bottom:100px;}
+#lightbox{cursor:zoom-out;justify-content:center;align-items:center;}
+#lightbox.open{display:flex;}
+#lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border-radius:10px;}
+.import-warn{background:#3a2a10;border:1px solid var(--primary);padding:1rem;border-radius:10px;margin-bottom:1rem;font-size:.85rem;}
+[data-lucide]{width:18px;height:18px;vertical-align:-4px;stroke-width:2.2;}
+.logo [data-lucide]{width:24px;height:24px;vertical-align:-6px;color:var(--primary);}
+.btn-nav [data-lucide],.btn-full [data-lucide]{margin-left:4px;}
+.home-cats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+.home-cat-card{background:var(--card);border:1px solid #333;border-radius:14px;padding:1.4rem .8rem;text-align:center;cursor:pointer;transition:.2s;}
+.home-cat-card:hover{border-color:var(--primary);transform:translateY(-3px);}
+.home-cat-card i{width:28px;height:28px;color:var(--primary);margin-bottom:8px;}
+.home-cat-card span{display:block;font-size:.85rem;font-weight:bold;}
+.home-support-box{background:var(--card);border:1px solid #333;border-radius:14px;padding:1.2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.home-support-box i{width:32px;height:32px;color:var(--primary);flex-shrink:0;}
+.home-support-box div{flex:1;}
+.home-support-box b{display:block;} .home-support-box span{font-size:.8rem;color:#aaa;}
+.chat-widget{position:fixed;bottom:20px;left:20px;background:#0088cc;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:998;box-shadow:0 4px 15px rgba(0,136,204,.4);}
+.chat-widget i{width:26px;height:26px;color:#fff;}
+
+/* ===== HERO BANNER ===== */
+.hero-banner{position:relative;width:100%;min-height:320px;border-radius:16px;overflow:hidden;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;}
+.banner-bg{position:absolute;inset:0;z-index:1;}
+.banner-bg img{width:100%;height:100%;object-fit:cover;}
+.banner-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(15,15,26,0.65),rgba(255,77,46,0.25));}
+.banner-content{position:relative;z-index:3;text-align:center;padding:2rem;max-width:500px;}
+.banner-content h1{font-size:2rem;margin-bottom:0.5rem;color:#fff;text-shadow:2px 2px 10px rgba(0,0,0,0.5);}
+.banner-content p{color:#ddd;margin-bottom:1.2rem;font-size:1rem;text-shadow:1px 1px 5px rgba(0,0,0,0.5);}
+.btn-hero{background:var(--primary);color:white;border:none;padding:0.8rem 2.2rem;border-radius:50px;font-weight:bold;font-size:1rem;cursor:pointer;box-shadow:0 5px 20px rgba(255,77,46,0.5);transition:0.3s;font-family:inherit;}
+.btn-hero:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(255,77,46,0.7);}
+.floating-img{position:absolute;z-index:2;width:180px;height:180px;filter:drop-shadow(0 10px 30px rgba(0,0,0,0.4));transition:opacity 0.5s ease;}
+.floating-img img{width:100%;height:100%;object-fit:contain;border-radius:20px;}
+.float-right{top:20px;right:30px;animation:floatDown 4s ease-in-out infinite;}
+.float-left{bottom:20px;left:30px;animation:floatDown 4s ease-in-out infinite;animation-delay:1s;}
+@keyframes floatDown{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(20px) rotate(3deg);}}
+.floating-img.fade-out{opacity:0;}
+
+/* ===== BANNER ADMIN ===== */
+.banner-admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;}
+.img-preview{margin-top:10px;min-height:100px;border:2px dashed rgba(255,255,255,0.1);border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:center;}
+.img-preview img{max-width:100%;max-height:150px;border-radius:8px;object-fit:contain;}
+.floating-pair{display:flex;gap:10px;margin-bottom:10px;align-items:center;background:rgba(255,255,255,0.03);padding:10px;border-radius:10px;flex-wrap:wrap;}
+.floating-pair input{flex:1;padding:8px;border-radius:8px;border:1px solid #444;background:#1a1a2e;color:white;font-size:0.85rem;min-width:120px;}
+.floating-pair .remove-btn{background:#c62828;color:white;border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:1.1rem;}
+.pair-label{color:#888;font-size:0.8rem;min-width:25px;font-weight:bold;}
+
+/* ===== ADMIN PANEL ===== */
+.admin-wrapper{display:flex;min-height:70vh;gap:0;background:var(--dark);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.05);}
+.admin-sidebar{width:260px;background:var(--card);border-left:1px solid rgba(255,255,255,0.05);padding:1.5rem 0;display:flex;flex-direction:column;flex-shrink:0;transition:all 0.3s ease;}
+.sidebar-header{padding:0 1.5rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;}
+.sidebar-logo{display:flex;align-items:center;gap:10px;font-weight:bold;font-size:1.1rem;color:var(--primary);}
+.sidebar-logo i{width:24px;height:24px;}
+.sidebar-close{display:none;background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;}
+.sidebar-nav{flex:1;padding:1rem 0.8rem;display:flex;flex-direction:column;gap:4px;}
+.admin-nav-item{display:flex;align-items:center;gap:12px;padding:0.8rem 1rem;border-radius:10px;color:var(--text);text-decoration:none;cursor:pointer;transition:all 0.2s ease;opacity:0.7;}
+.admin-nav-item:hover{background:rgba(255,77,46,0.08);opacity:1;}
+.admin-nav-item.active{background:rgba(255,77,46,0.15);color:var(--primary);opacity:1;border-right:3px solid var(--primary);}
+.admin-nav-item i{width:20px;height:20px;flex-shrink:0;}
+.admin-nav-item span{flex:1;}
+.nav-badge{background:rgba(255,255,255,0.1);padding:2px 10px;border-radius:20px;font-size:0.7rem;font-weight:bold;}
+.pending-badge{background:var(--primary);color:#fff;}
+.sidebar-footer{padding:1rem 1.5rem 0;border-top:1px solid rgba(255,255,255,0.05);}
+.sidebar-logout{display:flex;align-items:center;gap:10px;width:100%;padding:0.7rem 1rem;background:none;border:none;border-radius:10px;color:#ff6b6b;cursor:pointer;transition:0.2s;}
+.sidebar-logout:hover{background:rgba(255,107,107,0.1);}
+.sidebar-logout i{width:20px;height:20px;}
+.admin-main{flex:1;padding:1.5rem;overflow-y:auto;min-height:400px;}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);flex-wrap:wrap;gap:10px;}
+.menu-toggle{display:none;background:none;border:none;color:var(--text);cursor:pointer;}
+.menu-toggle i{width:28px;height:28px;}
+.admin-header-title h2{font-size:1.3rem;font-weight:bold;margin:0;}
+.admin-header-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.admin-date{font-size:0.8rem;color:#888;}
+.section-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;}
+.section-toolbar h3{font-size:1rem;margin:0;color:var(--text);}
+.search-wrapper input{padding:0.6rem 1rem;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--text);min-width:220px;}
+.filter-group select{padding:0.6rem 1rem;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--text);}
+.btn-primary{background:var(--primary);color:#fff;border:none;padding:0.6rem 1.2rem;border-radius:10px;font-weight:bold;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:0.2s;}
+.btn-primary:hover{opacity:0.85;transform:translateY(-1px);}
+.btn-primary i{width:18px;height:18px;}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:2rem;}
+.settings-card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:1.5rem;}
+.settings-card h3{font-size:0.95rem;margin-bottom:1.2rem;color:var(--text);}
+.preview-box{background:rgba(255,255,255,0.03);padding:0.8rem;border-radius:8px;font-size:0.85rem;color:#888;margin-top:8px;}
+.btn-save-all{width:100%;justify-content:center;padding:0.9rem;}
+.dashboard-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem;}
+.stat-card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:1.5rem;text-align:center;}
+.stat-card .stat-number{font-size:1.8rem;font-weight:bold;color:var(--primary);}
+.stat-card .stat-label{font-size:0.8rem;color:#888;margin-top:4px;}
+.rt{width:100%;border-collapse:collapse;font-size:.82rem;}
+.rt th{text-align:right;padding:.5rem;background:#1a1a2e;color:#aaa;font-weight:normal;}
+.rt td{padding:.5rem;border-bottom:1px solid #333;}
+.discount-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;}
+.discount-card{background:var(--card);border:1px solid #333;border-radius:12px;padding:1.2rem;text-align:center;}
+.discount-card .discount-code{font-size:1.2rem;font-weight:bold;color:var(--primary);}
+.discount-card .discount-rate{font-size:.9rem;color:#aaa;margin:6px 0;}
+.loading-spinner{text-align:center;padding:3rem;color:#888;}
+
+/* ===== بخش‌های پنل مدیریت - فقط یکی نشون داده میشه ===== */
+.admin-panel-section{display:none !important;}
+.admin-panel-section.active{display:block !important;}
+
+@media(max-width:768px){
+  .home-cats-grid{grid-template-columns:repeat(2,1fr);}
+  .hero-banner{min-height:260px;}
+  .floating-img{width:100px;height:100px;}
+  .float-right{top:10px;right:10px;}
+  .float-left{bottom:10px;left:10px;}
+  .banner-content h1{font-size:1.4rem;}
+  .banner-content p{font-size:0.85rem;}
+  .btn-hero{padding:0.6rem 1.5rem;font-size:0.85rem;}
+  .products-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem;}
+  .page{padding:1rem;}
+  header{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem;}
+  .logo{font-size:1.2rem;}
+  .cart-float{padding:.8rem 1.1rem;font-size:.85rem;bottom:14px;right:14px;}
+  .modal-box,.cart-content{padding:1.2rem;border-radius:12px;}
+  .admin-product-row{flex-wrap:wrap;}
+  h2{font-size:1.3rem;}
+  .admin-sidebar{position:fixed;top:0;right:-300px;height:100%;width:280px;z-index:1000;box-shadow:-4px 0 30px rgba(0,0,0,0.3);}
+  .admin-sidebar.open{right:0;}
+  .sidebar-close{display:block;}
+  .menu-toggle{display:block;}
+  .admin-main{padding:1rem;}
+  .settings-grid{grid-template-columns:1fr;}
+  .section-toolbar{flex-direction:column;align-items:stretch;}
+  .search-wrapper input{min-width:auto;width:100%;}
+  .dashboard-stats{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:420px){
+  .products-grid{grid-template-columns:repeat(2,1fr);}
+  .product-card img{width:110px;height:110px;}
+}
+button,.btn-cat,.btn-sub-cat,.product-card{-webkit-tap-highlight-color:transparent;}
+button{min-height:40px;}
+
+/* ===== DARK/LIGHT MODE ===== */
+html.light{--dark:#f0f0f0;--card:#ffffff;--text:#111111;}
+html.light body{background:#f0f0f0;color:#111;}
+html.light header{background:#fff;border-bottom:2px solid var(--primary);}
+html.light .btn-nav{background:#eee;color:#111;}
+html.light .btn-cat{background:#ddd;color:#111;border-color:#bbb;}
+html.light .product-card{background:#fff;border-color:#ddd;}
+html.light .admin-product-row,html.light .order-card{background:#fff;border-color:#ddd;}
+html.light .search-box input,html.light .form-group input,html.light .form-group select,html.light .form-group textarea{background:#f5f5f5;color:#111;border-color:#ccc;}
+html.light .modal-box,html.light .cart-content{background:#fff;}
+html.light .import-warn{background:#fff3e0;}
+html.light .side-menu{background:#fff;}
+html.light .side-menu-items a,html.light .side-menu-items button{color:#111;border-bottom-color:#eee;}
+html.light .card-copy-row{background:#f5f5f5;}
+html.light .home-cat-card{background:#fff;border-color:#ddd;}
+html.light .home-support-box{background:#fff;border-color:#ddd;}
+html.light .theme-toggle{background:#eee;border-color:#ddd;color:#111;}
+html.light .admin-wrapper{background:#f8f9fa;}
+html.light .admin-sidebar{background:#fff;border-left-color:#eee;}
+html.light .sidebar-header{border-bottom-color:#eee;}
+html.light .admin-nav-item:hover{background:rgba(0,0,0,0.04);}
+html.light .admin-nav-item.active{background:rgba(255,77,46,0.08);}
+html.light .settings-card{background:#fff;border-color:#eee;}
+html.light .search-wrapper input,html.light .filter-group select{background:#f5f5f5;border-color:#ddd;color:#333;}
+html.light .admin-header{border-bottom-color:#eee;}
+html.light .stat-card{background:#fff;border-color:#eee;}
+html.light .discount-card{background:#fff;border-color:#ddd;}
+html.light .floating-pair{background:rgba(0,0,0,0.03);}
+html.light .floating-pair input{background:#fff;color:#111;border-color:#ccc;}
+.theme-toggle{background:none;border:1px solid #555;border-radius:20px;padding:5px 10px;cursor:pointer;color:var(--text);display:flex;align-items:center;gap:6px;font-size:13px;min-height:36px;}
+#loading-screen{position:fixed;inset:0;background:#0f0f1a;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s;}
+#loading-screen.hidden{opacity:0;pointer-events:none;}
+.loader{width:45px;aspect-ratio:1;--c:no-repeat linear-gradient(var(--primary) 0 0);background:var(--c) 0% 50%,var(--c) 50% 50%,var(--c) 100% 50%;background-size:20% 50%;animation:l3 1s infinite linear;}
+@keyframes l3{20%{background-size:20% 20%,20% 50%,20% 50%}40%{background-size:20% 100%,20% 20%,20% 50%}60%{background-size:20% 50%,20% 100%,20% 20%}80%{background-size:20% 50%,20% 50%,20% 100%}100%{background-size:20% 50%,20% 50%,20% 50%}}
+.loader-text{color:var(--primary);font-size:1.2rem;font-weight:bold;margin-top:18px;letter-spacing:2px;}
+
+.hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);border-radius:2px;}
+.side-menu{position:fixed;top:0;right:-290px;width:280px;height:100%;background:#1a1a2e;z-index:1500;transition:.35s;padding:2rem 1.5rem;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4);}
+.side-menu.open{right:0;}
+.side-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1499;}
+.side-overlay.open{display:block;}
+.side-menu-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;}
+.side-menu-close{background:none;border:none;color:var(--text);font-size:1.6rem;cursor:pointer;min-height:auto;}
+.side-menu-items a,.side-menu-items button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:var(--text);font-size:1rem;padding:.9rem .5rem;border-bottom:1px solid #333;cursor:pointer;text-decoration:none;min-height:auto;}
+.side-menu-items a:hover,.side-menu-items button:hover{color:var(--primary);}
+.side-menu-items .highlight-item{color:var(--primary);font-weight:bold;background:rgba(255,77,46,0.08);border-radius:8px;padding:12px;margin-top:10px;}
+
+.discount-section{margin:1.5rem 0;}
+.discount-section h3{font-size:1.1rem;font-weight:bold;margin-bottom:1rem;}
+.discount-track-wrap{overflow:hidden;}
+.discount-track{display:flex;gap:1rem;animation:scrollLeft 28s linear infinite;}
+.discount-track:hover{animation-play-state:paused;}
+@keyframes scrollLeft{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.d-mini{min-width:170px;background:var(--card);border:1px solid #333;border-radius:12px;padding:.8rem;text-align:center;flex-shrink:0;cursor:pointer;}
+.d-mini img{width:90px;height:90px;object-fit:contain;border-radius:8px;margin-bottom:6px;}
+.d-mini h4{font-size:.75rem;margin-bottom:4px;line-height:1.3;}
+.d-mini .op{text-decoration:line-through;color:#888;font-size:.7rem;}
+.d-mini .np{color:var(--primary);font-weight:bold;font-size:.85rem;}
+.d-badge{background:var(--primary);color:#fff;border-radius:20px;padding:1px 7px;font-size:.65rem;font-weight:bold;display:inline-block;margin-bottom:4px;}
+.card-copy-row{display:flex;align-items:center;gap:8px;background:#1a1a2e;padding:10px 12px;border-radius:10px;margin:10px 0;}
+.card-num{font-family:monospace;font-size:1rem;letter-spacing:2px;flex:1;direction:ltr;text-align:center;}
+.btn-copy{background:var(--primary);border:none;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;min-height:auto;transition:.2s;}
+.btn-copy.ok{background:#4caf50;}
+.pagination{display:flex;gap:8px;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;}
+.page-btn{background:#222;color:white;border:1px solid #444;padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-weight:bold;min-width:40px;}
+.page-btn.active{background:var(--primary);border-color:var(--primary);}
+</style>
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<div id="loading-screen"><div class="loader"></div><div class="loader-text">FitForge</div></div>
+
+<div class="side-overlay" id="sideOverlay" onclick="closeSideMenu()"></div>
+<div class="side-menu" id="sideMenu">
+  <div class="side-menu-header">
+    <span style="font-weight:bold;color:var(--primary);font-size:1.1rem">🏋️ FitForge</span>
+    <button class="side-menu-close" onclick="closeSideMenu()">✕</button>
+  </div>
+  <div class="side-menu-items">
+    <a onclick="showPage('home');closeSideMenu()"><i data-lucide="home"></i> صفحه اصلی</a>
+    <a onclick="showPage('shop');closeSideMenu()"><i data-lucide="store"></i> فروشگاه</a>
+    <a href="https://instagram.com/fitforge_ir" target="_blank" onclick="closeSideMenu()"><i data-lucide="instagram"></i> اینستاگرام</a>
+    <a href="https://t.me/Fitforgeshop" target="_blank" onclick="closeSideMenu()"><i data-lucide="send"></i> تلگرام</a>
+    <a href="https://wa.me/fitforgeshop" target="_blank" onclick="closeSideMenu()"><i data-lucide="message-circle"></i> واتساپ</a>
+    <button onclick="toggleTheme();closeSideMenu()"><i data-lucide="sun-moon"></i> <span id="themeLabel">حالت روشن</span></button>
+    <button class="highlight-item" onclick="openAdminPin();closeSideMenu()"><i data-lucide="lock"></i> ورود ادمین</button>
+  </div>
+</div>
+
+<header>
+  <div class="logo" onclick="showPage('home')"><i data-lucide="dumbbell"></i> fitforge.ir</div>
+  <div class="nav-btns">
+    <button class="btn-nav" onclick="showPage('shop')"><i data-lucide="store"></i> فروشگاه</button>
+    <a class="insta-header-icon" id="headerInstaLink" href="https://instagram.com/fitforge_ir" target="_blank" title="اینستاگرام">
+      <i data-lucide="instagram" id="headerInstaIcon"></i>
+    </a>
+    <button class="theme-toggle" onclick="toggleTheme()"><i data-lucide="sun-moon"></i></button>
+    <button class="hamburger" onclick="openSideMenu()"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="page active" id="page-home">
+  <div class="hero-banner" id="heroBanner">
+    <div class="banner-bg">
+      <img id="bannerBgImg" src="https://placehold.co/1200x400/1a1a2e/aaa?text=Background" alt="">
+      <div class="banner-overlay"></div>
+    </div>
+    <div class="floating-img float-right" id="floatingRightWrap">
+      <img id="floatImgRight" src="https://placehold.co/300x300/ff4d2e/fff?text=Image+1" alt="">
+    </div>
+    <div class="floating-img float-left" id="floatingLeftWrap">
+      <img id="floatImgLeft" src="https://placehold.co/300x300/16213e/fff?text=Image+2" alt="">
+    </div>
+    <div class="banner-content">
+      <h1 id="bannerTitle">fitforge.ir</h1>
+      <p id="bannerText">فروشگاه ورزشی</p>
+      <button class="btn-hero" onclick="showPage('shop')" id="bannerBtn">ورود به فروشگاه</button>
+    </div>
+  </div>
+
+  <div class="home-cats-grid">
+    <div class="home-cat-card" onclick="goShopWithCat('suppl')"><i data-lucide="pill"></i><span>مکمل‌ها</span></div>
+    <div class="home-cat-card" onclick="goShopWithCat('gear')"><i data-lucide="dumbbell"></i><span>تجهیزات</span></div>
+    <div class="home-cat-card" onclick="goShopWithCat('cloth-m')"><i data-lucide="shirt"></i><span>پوشاک مردانه</span></div>
+    <div class="home-cat-card" onclick="goShopWithCat('cloth-w')"><i data-lucide="shirt"></i><span>پوشاک بانوان</span></div>
+  </div>
+  <div class="discount-section">
+    <h3>🔥 محصولات تخفیفی</h3>
+    <div class="discount-track-wrap"><div class="discount-track" id="discountTrack"></div></div>
+  </div>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+    <a id="homeInstaLink" href="https://instagram.com/fitforge_ir" target="_blank" style="flex:1;min-width:200px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);border-radius:14px;padding:1.2rem;display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;">
+      <i data-lucide="instagram" style="width:32px;height:32px;flex-shrink:0"></i>
+      <div><b style="display:block">اینستاگرام ما</b><span style="font-size:.8rem;opacity:.85" id="instaUsername">@fitforge_ir</span></div>
+    </a>
+    <div style="flex:1;min-width:200px;" class="home-support-box">
+      <i data-lucide="headset"></i>
+      <div><b>پشتیبانی و سفارش</b><span>سوالی داری؟ مستقیم پیام بده</span></div>
+      <button class="btn-nav" onclick="window.open('https://t.me/Fitforgeshop','_blank')">تلگرام</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-shop">
+  <div class="hero"><h2>فروشگاه fitforge.ir</h2></div>
+  <div class="search-box" style="display:flex;gap:8px;align-items:center;">
+    <input type="text" id="shop-search" placeholder="جستجوی محصول..." oninput="applyFilters()" style="flex:1">
+    <select id="sort-select" onchange="applyFilters()" style="background:#16213e;color:#fff;border:1px solid #444;border-radius:8px;padding:.6rem .8rem;font-family:inherit;font-size:.85rem;cursor:pointer;min-width:130px;">
+      <option value="default">مرتب‌سازی</option>
+      <option value="price-asc">قیمت: کم به زیاد</option>
+      <option value="price-desc">قیمت: زیاد به کم</option>
+      <option value="name-asc">نام: الف تا ی</option>
+      <option value="discount">بیشترین تخفیف</option>
+    </select>
+  </div>
+  <div class="shop-main-cats" id="mainCats"></div>
+  <div class="shop-sub-cats" id="subCats" style="display:none"></div>
+  <div id="loadingMsg" style="text-align:center;padding:2rem;color:#888">در حال بارگذاری محصولات...</div>
+  <div class="products-grid" id="products-grid"></div>
+  <div class="pagination" id="pagination"></div>
+</div>
+
+<div id="admin-pin-modal">
+  <div class="modal-box" style="text-align:center">
+    <h2>🔐 ورود ادمین</h2>
+    <p style="color:#888;font-size:.85rem;margin-top:8px;">رمز ۴ رقمی رو وارد کن</p>
+    <input type="tel" class="pin-input" id="adminPinInput" maxlength="4" placeholder="----">
+    <button class="btn-full" onclick="checkAdminPin()">ورود</button>
+    <button class="btn-full gray" onclick="closeAdminPin()">انصراف</button>
+  </div>
+</div>
+
+<div class="page" id="page-admin">
+  <div class="admin-wrapper">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo"><i data-lucide="dumbbell"></i><span>پنل مدیریت</span></div>
+        <button class="sidebar-close" onclick="toggleAdminSidebar()">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="admin-nav-item active" data-tab="dashboard" onclick="showAdminTab('dashboard')"><i data-lucide="layout-dashboard"></i><span>داشبورد</span></a>
+        <a class="admin-nav-item" data-tab="products" onclick="showAdminTab('products')"><i data-lucide="package"></i><span>محصولات</span><span class="nav-badge" id="productCount">۰</span></a>
+        <a class="admin-nav-item" data-tab="orders" onclick="showAdminTab('orders')"><i data-lucide="clipboard-list"></i><span>سفارش‌ها</span><span class="nav-badge pending-badge" id="orderCount">۰</span></a>
+        <a class="admin-nav-item" data-tab="customers" onclick="showAdminTab('customers')"><i data-lucide="users"></i><span>مشتریان</span></a>
+        <a class="admin-nav-item" data-tab="discounts" onclick="showAdminTab('discounts')"><i data-lucide="ticket-percent"></i><span>تخفیف‌ها</span></a>
+        <a class="admin-nav-item" data-tab="banners" onclick="showAdminTab('banners')"><i data-lucide="image"></i><span>بنرها</span></a>
+        <a class="admin-nav-item" data-tab="settings" onclick="showAdminTab('settings')"><i data-lucide="settings"></i><span>تنظیمات</span></a>
+      </nav>
+      <div class="sidebar-footer"><button onclick="showPage('home')" class="sidebar-logout"><i data-lucide="log-out"></i><span>خروج</span></button></div>
+    </aside>
+    <main class="admin-main">
+      <div class="admin-header">
+        <button class="menu-toggle" onclick="toggleAdminSidebar()"><i data-lucide="menu"></i></button>
+        <div class="admin-header-title"><h2 id="adminPageTitle">داشبورد</h2></div>
+        <div class="admin-header-actions">
+          <span class="admin-date" id="adminDate"></span>
+          <button class="theme-toggle" onclick="toggleTheme()"><i data-lucide="sun-moon"></i></button>
+        </div>
+      </div>
+      <div class="admin-content">
+        <div class="admin-panel-section active" id="admin-dashboard"><div id="admin-dashboard-content"><div class="loading-spinner">⏳ در حال بارگذاری...</div></div></div>
+        <div class="admin-panel-section" id="admin-products">
+          <div class="section-toolbar">
+            <button class="btn-primary" onclick="openProductForm(null)"><i data-lucide="plus-circle"></i> افزودن محصول</button>
+            <div class="search-wrapper"><input type="text" id="adminSearch" placeholder="جستجوی محصولات..." oninput="renderAdminProducts()"></div>
+          </div>
+          <div id="importBox"></div>
+          <div id="admin-products-list"></div>
+        </div>
+        <div class="admin-panel-section" id="admin-orders">
+          <div class="section-toolbar"><h3>لیست سفارش‌ها</h3><div class="filter-group"><select id="orderFilter" onchange="renderOrders()"><option value="all">همه</option><option value="pending">در انتظار</option><option value="approved">تایید شده</option><option value="cancelled">لغو شده</option></select></div></div>
+          <div id="orders-list"></div>
+        </div>
+        <div class="admin-panel-section" id="admin-customers"><div id="customers-list"></div></div>
+        <div class="admin-panel-section" id="admin-discounts">
+          <div class="section-toolbar"><h3>کدهای تخفیف</h3><button class="btn-primary" onclick="openDiscountForm()"><i data-lucide="plus-circle"></i> کد جدید</button></div>
+          <div id="discounts-list"></div>
+        </div>
+        <div class="admin-panel-section" id="admin-banners">
+          <div class="section-toolbar"><h3>🎨 مدیریت بنر اصلی</h3><button class="btn-primary" onclick="saveBannerSettings()"><i data-lucide="save"></i> ذخیره تغییرات</button></div>
+          <div class="banner-admin-grid">
+            <div class="settings-card">
+              <h3>🖼️ عکس پس‌زمینه (ثابت)</h3>
+              <div class="form-group"><label>لینک عکس پس‌زمینه</label><input type="text" id="ban-bg" placeholder="https://..."></div>
+              <div class="form-group"><label>📤 یا آپلود عکس</label><input type="file" accept="image/*" onchange="uploadBannerImage(this, 'ban-bg')"></div>
+              <div class="img-preview" id="preview-bg"></div>
+            </div>
+            <div class="settings-card">
+              <h3>📸 عکس لوگو اینستاگرام (هدر)</h3>
+              <div class="form-group"><label>لینک عکس لوگو</label><input type="text" id="ban-insta-logo" placeholder="https://..."></div>
+              <div class="form-group"><label>📤 یا آپلود عکس</label><input type="file" accept="image/*" onchange="uploadBannerImage(this, 'ban-insta-logo')"></div>
+              <div class="img-preview" id="preview-insta-logo"></div>
+              <small style="color:#888;font-size:.75rem;">اگه خالی بذاری، آیکون پیش‌فرض اینستاگرام نمایش داده میشه</small>
+            </div>
+            <div class="settings-card" style="grid-column:1/-1;">
+              <h3>⏱️ زمان چرخش عکس‌ها (ثانیه)</h3>
+              <div class="form-group">
+                <label>هر چند ثانیه عکس‌ها عوض بشن؟</label>
+                <input type="number" id="ban-speed" min="1" max="60" value="4" placeholder="مثلاً ۴">
+                <small style="color:#888;font-size:.7rem">پیش‌فرض: ۴ ثانیه</small>
+              </div>
+            </div>
+            <div class="settings-card" style="grid-column:1/-1;">
+              <h3>🎈 جفت عکس‌های شناور (چرخشی)</h3>
+              <p style="color:#888;font-size:.8rem;margin-bottom:12px;">هر جفت شامل عکس چپ و راست هست. بعد از زمان مشخص، جفت بعدی نمایش داده میشه.</p>
+              <div id="floating-images-list"></div>
+              <button class="btn-primary" onclick="addFloatingPair()" style="margin-top:12px;"><i data-lucide="plus-circle"></i> افزودن جفت عکس جدید</button>
+            </div>
+            <div class="settings-card">
+              <h3>✍️ متن بنر</h3>
+              <div class="form-group"><label>عنوان</label><input type="text" id="ban-title" placeholder="fitforge.ir"></div>
+              <div class="form-group"><label>زیرعنوان</label><input type="text" id="ban-text" placeholder="فروشگاه ورزشی"></div>
+              <div class="form-group"><label>متن دکمه</label><input type="text" id="ban-btn" placeholder="ورود به فروشگاه"></div>
+            </div>
+            <div class="settings-card">
+              <h3>📱 یوزرنیم اینستاگرام</h3>
+              <div class="form-group"><label>یوزرنیم (بدون @)</label><input type="text" id="ban-insta" placeholder="fitforge_ir"></div>
+            </div>
+          </div>
+        </div>
+        <div class="admin-panel-section" id="admin-settings">
+          <div class="settings-grid">
+            <div class="settings-card"><h3>🔐 امنیت</h3><div class="form-group"><label>رمز مدیریت (۴ رقم)</label><input type="tel" id="setPin" maxlength="4" placeholder="رمز جدید"></div></div>
+            <div class="settings-card"><h3>💳 اطلاعات پرداخت</h3><div class="form-group"><label>شماره کارت</label><input type="text" id="setCard" placeholder="شماره کارت"></div><div class="form-group"><label>نام صاحب کارت</label><input type="text" id="setCardName" placeholder="نام صاحب کارت"></div></div>
+            <div class="settings-card"><h3>📱 ارتباط با مشتری</h3><div class="form-group"><label>آیدی تلگرام (بدون @)</label><input type="text" id="setTelegram" placeholder="آیدی تلگرام"></div><div class="form-group"><label>یوزرنیم واتساپ</label><input type="text" id="setWhatsapp" placeholder="مثلاً fitforgeshop"></div></div>
+            <div class="settings-card"><h3>💱 نرخ تبدیل ارز</h3><div class="form-group"><label>💰 نرخ تبدیل لیر به تومان</label><input type="number" id="liraToToman" placeholder="مثلاً ۵۰۰۰" value="5000"><small style="color:#888;font-size:.7rem">۱ لیر ترکیه = چند تومان؟</small></div><button class="btn-primary" onclick="saveLiraRate()" style="width:100%;margin-top:10px;">💾 ذخیره نرخ</button><div class="preview-box" id="pricingPreview">💡 ۱۰۰ لیر = <span id="previewResult">۰</span> تومان</div></div>
+          </div>
+          <button class="btn-primary btn-save-all" onclick="saveAllSettings()">💾 ذخیره تمام تنظیمات</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="product-form-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:1500;padding:2rem;overflow-y:auto;">
+  <div class="modal-box">
+    <h2 id="pf-title">محصول جدید</h2>
+    <div class="form-group"><label>نام محصول</label><input type="text" id="pf-name"></div>
+    <div class="form-group"><label>💰 قیمت به لیر (TRY)</label><input type="number" id="pf-price-lira" placeholder="مثلاً ۱۵۰۰" step="0.01" oninput="calculateProductPrice()"><small style="color:#888;font-size:.7rem">قیمت پایه محصول به لیر ترکیه</small></div>
+    <div class="form-group"><label>🚚 هزینه ارسال این محصول (تومان)</label><input type="number" id="pf-shipping" placeholder="مثلاً ۴۵۰۰۰۰" oninput="calculateProductPrice()"></div>
+    <div class="form-group"><label>📈 درصد سود این محصول (%)</label><input type="number" id="pf-profit" placeholder="مثلاً ۳۵" value="35" oninput="calculateProductPrice()"></div>
+    <div class="form-group" style="background:rgba(255,77,46,0.08);padding:1rem;border-radius:8px;">
+      <label>🇮🇷 قیمت نهایی در تومان (محاسبه خودکار)</label>
+      <div style="font-size:1.2rem;font-weight:bold;color:var(--primary);" id="pf-price-toman-display">۰ تومان</div>
+    </div>
+    <div class="form-group"><label>لینک عکس اصلی</label><input type="text" id="pf-img"></div>
+    <div class="form-group"><label>لینک عکس دوم</label><input type="text" id="pf-img2"></div>
+    <div class="form-group"><label>طعم‌ها (با کاما جدا کن)</label><input type="text" id="pf-flavors"></div>
+    <div class="form-group"><label>دسته‌بندی</label><select id="pf-cat"></select></div>
+    <div class="form-group"><label>تخفیف (%)</label><input type="number" id="pf-discount" value="0"></div>
+    <div class="form-group"><label>موجودی</label><input type="number" id="pf-stock" value="10"></div>
+    <div class="form-group"><label>توضیحات</label><textarea id="pf-desc"></textarea></div>
+    <button class="btn-full green" onclick="saveProductForm()">ذخیره</button>
+    <button class="btn-full gray" onclick="closeProductForm()">انصراف</button>
+  </div>
+</div>
+
+<div class="cart-float" onclick="openCart()"><i data-lucide="shopping-cart"></i> سبد خرید (<span id="cart-count">0</span>)</div>
+<div id="cart-modal">
+  <div class="cart-content">
+    <div id="step-1">
+      <h2>سبد خرید شما</h2>
+      <div id="cart-items-list" style="margin:1.5rem 0;"></div>
+      <h3 style="text-align:center;">مجموع: <span id="total-price">0</span> تومان</h3>
+      <button class="btn-full" onclick="showStep2()">ادامه — ورود اطلاعات ارسال ⬅️</button>
+      <button class="btn-full gray" onclick="closeCart()">بستن</button>
+    </div>
+    <div id="step-2" style="display:none;">
+      <h2>اطلاعات گیرنده</h2>
+      <div class="form-group"><label>نام *</label><input type="text" id="c-fname"></div>
+      <div class="form-group"><label>نام خانوادگی *</label><input type="text" id="c-lname"></div>
+      <div class="form-group"><label>شماره تماس *</label><input type="tel" id="c-phone"></div>
+      <div class="form-group"><label>استان *</label><input type="text" id="c-province"></div>
+      <div class="form-group"><label>شهر *</label><input type="text" id="c-city"></div>
+      <div class="form-group"><label>آدرس دقیق *</label><input type="text" id="c-addr"></div>
+      <div class="form-group"><label>کد پستی *</label><input type="text" id="c-zip"></div>
+      <div class="form-group"><label>کد تخفیف</label><input type="text" id="c-discount" oninput="checkDiscount()"></div>
+      <p id="discount-status" style="font-size:.85rem;min-height:20px;"></p>
+      <div id="cardInfoBox" class="import-warn" style="border-color:#444"></div>
+      <button class="btn-full" style="background:#0088cc;" onclick="finalizeOrder('telegram')"><i data-lucide="send"></i> ارسال فاکتور به تلگرام</button>
+      <button class="btn-full whatsapp" onclick="finalizeOrder('whatsapp')"><i data-lucide="message-circle"></i> ارسال فاکتور به واتساپ</button>
+      <button class="btn-full gray" onclick="document.getElementById('step-1').style.display='block';document.getElementById('step-2').style.display='none';">↩️ بازگشت</button>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox" onclick="closeLightbox()"><img id="lightbox-img"></div>
+<div class="chat-widget" onclick="window.open('https://t.me/Fitforgeshop','_blank')"><i data-lucide="message-circle"></i></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAUAUDpQ-OiXcv2Mbp5kXwIvxpskHZwwuM",
+  authDomain: "fitforge-ir.firebaseapp.com",
+  projectId: "fitforge-ir",
+  storageBucket: "fitforge-ir.firebasestorage.app",
+  messagingSenderId: "645481879357",
+  appId: "1:645481879357:web:037bb8feb9b1ea9adbd754"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const CATS = {
+  'suppl': {label:'مکمل‌ها', subs:{'suppl-creatine':'کراتین','suppl-gainer':'گینر','suppl-amino':'آمینو اسید','suppl-protein':'پروتئین','suppl-vitamins':'ویتامین‌ها','suppl-pump':'پمپ','suppl-fatburner':'چربی‌سوز','suppl-packs':'پک‌ها','suppl-more':'متفرقه'}},
+  'gear': {label:'تجهیزات', subs:{'gear-girdle':'گن','gear-kneewrap':'زانوبند','gear-wristwrap':'مچ‌بند','gear-belt':'کمربند','gear-bands':'کش','gear-other':'سایر'}},
+  'cloth-m': {label:'پوشاک مردانه', subs:{'cloth-m-tshirt':'تیشرت','cloth-m-tank':'رکابی','cloth-m-hoodie':'هودی','cloth-m-pants':'شلوار','cloth-m-shorts':'شلوارک','cloth-m-sweat':'سویشرت','cloth-m-shoes':'کفش','cloth-m-acc':'اکسسوری'}},
+  'cloth-w': {label:'پوشاک بانوان', subs:{'cloth-w-tshirt':'تیشرت','cloth-w-bra':'نیم‌تنه','cloth-w-hoodie':'هودی','cloth-w-pants':'شلوار','cloth-w-legging':'لگ','cloth-w-shortk':'شلوارک','cloth-w-shoes':'کفش','cloth-w-acc':'اکسسوری'}}
+};
+const SEED_PRODUCTS = [];
+
+let ADMIN_PIN = "1234";
+let SHOP_SETTINGS = {cardNumber:"6219-8618-7805-9442", cardName:"مانی هاشم‌پور", telegram:"Fitforgeshop", whatsapp:"fitforgeshop", instagram:"fitforge_ir", instagramLogo:""};
+let allProducts = [];
+let discountCodes = {};
+let cart = [];
+let currentMain = null, currentSub = null;
+let editingProductId = null;
+let globalLiraRate = 5000;
+let currentPage = 1;
+const itemsPerPage = 20;
+
+let bannerSettings = {
+  bg: 'https://placehold.co/1200x400/1a1a2e/aaa?text=Background',
+  floatingPairs: [
+    { left: 'https://placehold.co/300x300/ff4d2e/fff?text=Image+1', right: 'https://placehold.co/300x300/16213e/fff?text=Image+2' },
+    { left: 'https://placehold.co/300x300/2ecc71/fff?text=Image+3', right: 'https://placehold.co/300x300/3498db/fff?text=Image+4' },
+    { left: 'https://placehold.co/300x300/9b59b6/fff?text=Image+5', right: 'https://placehold.co/300x300/f39c12/fff?text=Image+6' }
+  ],
+  rotationSpeed: 4,
+  title: 'fitforge.ir',
+  text: 'فروشگاه ورزشی',
+  btn: 'ورود به فروشگاه'
+};
+
+let floatingPairIndex = 0;
+let floatingTimer = null;
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');window.scrollTo(0,0);}
+
+function toggleTheme(){
+  const isLight = document.documentElement.classList.toggle('light');
+  localStorage.setItem('ff_theme', isLight?'light':'dark');
+  const lbl = document.getElementById('themeLabel');
+  if(lbl) lbl.textContent = isLight ? 'حالت تاریک' : 'حالت روشن';
+}
+function applyThemeFromStorage(){const t=localStorage.getItem('ff_theme');if(t==='light') document.documentElement.classList.add('light');}
+applyThemeFromStorage();
+
+function openSideMenu(){document.getElementById('sideMenu').classList.add('open');document.getElementById('sideOverlay').classList.add('open');}
+function closeSideMenu(){document.getElementById('sideMenu').classList.remove('open');document.getElementById('sideOverlay').classList.remove('open');}
+function toggleAdminSidebar(){document.getElementById('adminSidebar').classList.toggle('open');}
+
+// ===== بنر =====
+function renderBanners(){
+  const bgImg = document.getElementById('bannerBgImg');
+  const title = document.getElementById('bannerTitle');
+  const text = document.getElementById('bannerText');
+  const btn = document.getElementById('bannerBtn');
+  if(bgImg) bgImg.src = bannerSettings.bg;
+  if(title) title.textContent = bannerSettings.title;
+  if(text) text.textContent = bannerSettings.text;
+  if(btn) btn.textContent = bannerSettings.btn;
+  floatingPairIndex = 0;
+  showCurrentFloatingPair();
+  startFloatingTimer();
+  updateSocialLinks();
+}
+function updateSocialLinks(){
+  const insta = SHOP_SETTINGS.instagram || 'fitforge_ir';
+  const headerLink = document.getElementById('headerInstaLink');
+  const homeLink = document.getElementById('homeInstaLink');
+  const instaUser = document.getElementById('instaUsername');
+  if(headerLink) headerLink.href = 'https://instagram.com/' + insta;
+  if(homeLink) homeLink.href = 'https://instagram.com/' + insta;
+  if(instaUser) instaUser.textContent = '@' + insta;
+  
+  const headerIcon = document.getElementById('headerInstaIcon');
+  if(headerIcon && SHOP_SETTINGS.instagramLogo){
+    const parent = headerIcon.parentElement;
+    if(parent && !parent.querySelector('img')){
+      headerIcon.remove();
+      const img = document.createElement('img');
+      img.src = SHOP_SETTINGS.instagramLogo;
+      img.alt = 'اینستاگرام';
+      parent.appendChild(img);
+    } else if(parent && parent.querySelector('img')){
+      parent.querySelector('img').src = SHOP_SETTINGS.instagramLogo;
+    }
+  }
+}
+function showCurrentFloatingPair(){
+  const pairs = bannerSettings.floatingPairs || [];
+  if(pairs.length === 0) return;
+  const pair = pairs[floatingPairIndex % pairs.length];
+  const floatRight = document.getElementById('floatImgRight');
+  const floatLeft = document.getElementById('floatImgLeft');
+  const rightWrap = document.getElementById('floatingRightWrap');
+  const leftWrap = document.getElementById('floatingLeftWrap');
+  if(rightWrap) rightWrap.classList.add('fade-out');
+  if(leftWrap) leftWrap.classList.add('fade-out');
+  setTimeout(() => {
+    if(floatRight) floatRight.src = pair.right;
+    if(floatLeft) floatLeft.src = pair.left;
+    if(rightWrap) rightWrap.classList.remove('fade-out');
+    if(leftWrap) leftWrap.classList.remove('fade-out');
+  }, 500);
+}
+function startFloatingTimer(){
+  if(floatingTimer) clearInterval(floatingTimer);
+  const pairs = bannerSettings.floatingPairs || [];
+  if(pairs.length <= 1) return;
+  const speed = (bannerSettings.rotationSpeed || 4) * 1000;
+  floatingTimer = setInterval(() => {
+    floatingPairIndex = (floatingPairIndex + 1) % pairs.length;
+    showCurrentFloatingPair();
+  }, speed);
+}
+async function loadBannerSettings(){
+  try {
+    const doc = await db.collection('shop_settings').doc('banner').get();
+    if(doc.exists){
+      const data = doc.data();
+      if(data.float1 && data.float2 && !data.floatingPairs){
+        data.floatingPairs = [{ left: data.float2, right: data.float1 }];
+        delete data.float1;
+        delete data.float2;
+      }
+      bannerSettings = { ...bannerSettings, ...data };
+    }
+  } catch(e){ console.error('Banner load error:', e); }
+  renderBanners();
+}
+async function saveBannerSettings(){
+  const pairs = [];
+  document.querySelectorAll('.floating-pair').forEach(pairEl => {
+    const left = pairEl.querySelector('.pair-left').value.trim();
+    const right = pairEl.querySelector('.pair-right').value.trim();
+    if(left && right){ pairs.push({ left, right }); }
+  });
+  const speed = parseInt(document.getElementById('ban-speed').value) || 4;
+  const data = {
+    bg: document.getElementById('ban-bg').value.trim() || bannerSettings.bg,
+    title: document.getElementById('ban-title').value.trim() || bannerSettings.title,
+    text: document.getElementById('ban-text').value.trim() || bannerSettings.text,
+    btn: document.getElementById('ban-btn').value.trim() || bannerSettings.btn,
+    rotationSpeed: speed,
+    floatingPairs: pairs.length > 0 ? pairs : bannerSettings.floatingPairs
+  };
+  try {
+    await db.collection('shop_settings').doc('banner').set(data, { merge: true });
+    bannerSettings = { ...bannerSettings, ...data };
+    renderBanners();
+    toast('✅ بنر ذخیره شد!');
+  } catch(e){ console.error(e); toast('خطا در ذخیره'); }
+}
+function loadBannerForm(){
+  document.getElementById('ban-bg').value = bannerSettings.bg || '';
+  document.getElementById('ban-title').value = bannerSettings.title || '';
+  document.getElementById('ban-text').value = bannerSettings.text || '';
+  document.getElementById('ban-btn').value = bannerSettings.btn || '';
+  document.getElementById('ban-speed').value = bannerSettings.rotationSpeed || 4;
+  document.getElementById('ban-insta').value = SHOP_SETTINGS.instagram || '';
+  document.getElementById('ban-insta-logo').value = SHOP_SETTINGS.instagramLogo || '';
+  document.getElementById('preview-bg').innerHTML = bannerSettings.bg ? `<img src="${bannerSettings.bg}">` : '';
+  document.getElementById('preview-insta-logo').innerHTML = SHOP_SETTINGS.instagramLogo ? `<img src="${SHOP_SETTINGS.instagramLogo}">` : '';
+  renderFloatingPairsList();
+}
+function renderFloatingPairsList(){
+  const container = document.getElementById('floating-images-list');
+  if(!container) return;
+  const pairs = bannerSettings.floatingPairs || [];
+  container.innerHTML = pairs.map((pair, i) => `
+    <div class="floating-pair" data-index="${i}">
+      <span class="pair-label">${i+1}.</span>
+      <input type="text" class="pair-left" placeholder="لینک عکس چپ" value="${pair.left || ''}">
+      <input type="text" class="pair-right" placeholder="لینک عکس راست" value="${pair.right || ''}">
+      <button class="remove-btn" onclick="removeFloatingPair(${i})">✕</button>
+    </div>
+  `).join('');
+  if(pairs.length === 0){ container.innerHTML = '<p style="color:#888;text-align:center;padding:1rem;">هنوز جفت عکسی اضافه نشده</p>'; }
+}
+function addFloatingPair(){
+  if(!bannerSettings.floatingPairs) bannerSettings.floatingPairs = [];
+  bannerSettings.floatingPairs.push({ left: '', right: '' });
+  renderFloatingPairsList();
+}
+function removeFloatingPair(index){
+  if(!confirm('این جفت عکس حذف بشه؟')) return;
+  bannerSettings.floatingPairs.splice(index, 1);
+  renderFloatingPairsList();
+}
+function uploadBannerImage(input, targetId){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById(targetId).value = e.target.result;
+    let previewId = 'preview-' + targetId.replace('ban-', '');
+    if(targetId === 'ban-insta-logo') previewId = 'preview-insta-logo';
+    const previewEl = document.getElementById(previewId);
+    if(previewEl){ previewEl.innerHTML = `<img src="${e.target.result}" alt="">`; }
+    toast('✅ عکس بارگذاری شد');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ===== DISCOUNT TRACK =====
+function renderDiscountTrack(){
+  const track = document.getElementById('discountTrack');
+  if(!track) return;
+  const discounted = allProducts.filter(p=>p.discount>0);
+  if(discounted.length===0){track.parentElement.parentElement.style.display='none';return;}
+  track.innerHTML = [...discounted,...discounted].map(p=>{
+    const final = Math.round(p.price*(1-p.discount/100));
+    return `<div class="d-mini" onclick="showPage('shop')"><img src="${p.img}" onerror="this.src='https://placehold.co/90x90/16213e/aaa?text=FF'"><div class="d-badge">%${p.discount}</div><h4>${p.name.slice(0,30)}</h4><div class="op">${p.price.toLocaleString()}</div><div class="np">${final.toLocaleString()} تومان</div></div>`;
+  }).join('');
+}
+
+function renderMainCats(){
+  const box = document.getElementById('mainCats');
+  box.innerHTML = '<button class="btn-cat active-cat" onclick="filterMain(null,this)">همه</button>' + Object.keys(CATS).map(k=>`<button class="btn-cat" onclick="filterMain('${k}',this)">${CATS[k].label}</button>`).join('');
+}
+function filterMain(main, btn){
+  document.querySelectorAll('.shop-main-cats .btn-cat').forEach(b=>b.classList.remove('active-cat'));
+  btn.classList.add('active-cat');
+  currentMain = main; currentSub = null;
+  const subBox = document.getElementById('subCats');
+  if(!main){ subBox.style.display='none';}
+  else{ subBox.style.display='flex'; subBox.innerHTML = '<button class="btn-sub-cat active-sub" onclick="filterSub(null,this)">همه</button>' + Object.keys(CATS[main].subs).map(k=>`<button class="btn-sub-cat" onclick="filterSub('${k}',this)">${CATS[main].subs[k]}</button>`).join(''); }
+  currentPage = 1;
+  applyFilters();
+}
+function filterSub(sub, btn){
+  document.querySelectorAll('.btn-sub-cat').forEach(b=>b.classList.remove('active-sub'));
+  btn.classList.add('active-sub');
+  currentSub = sub;
+  currentPage = 1;
+  applyFilters();
+}
+function goShopWithCat(main){
+  showPage('shop');
+  setTimeout(()=>{
+    const btn = [...document.querySelectorAll('.shop-main-cats .btn-cat')].find(b=>b.textContent.trim()===CATS[main].label);
+    if(btn) filterMain(main, btn);
+  }, 50);
+}
+
+// ===== PRICING =====
+function calculateProductFinalPrice(liraPrice, shippingCost, profitPercent) {
+  if (!liraPrice || liraPrice <= 0) return 0;
+  const baseToman = liraPrice * globalLiraRate;
+  const roundedToman = Math.ceil(baseToman / 1000) * 1000;
+  const withShipping = roundedToman + (shippingCost || 0);
+  const profit = Math.round(withShipping * ((profitPercent || 0) / 100));
+  const finalPrice = withShipping + profit;
+  return Math.ceil(finalPrice / 1000) * 1000;
+}
+function calculateProductPrice() {
+  const liraInput = document.getElementById('pf-price-lira');
+  const shippingInput = document.getElementById('pf-shipping');
+  const profitInput = document.getElementById('pf-profit');
+  const displayEl = document.getElementById('pf-price-toman-display');
+  if (!liraInput || !shippingInput || !profitInput || !displayEl) return;
+  const lira = parseFloat(liraInput.value) || 0;
+  const shipping = parseFloat(shippingInput.value) || 0;
+  const profit = parseFloat(profitInput.value) || 0;
+  if (lira > 0) {
+    const finalPrice = calculateProductFinalPrice(lira, shipping, profit);
+    displayEl.textContent = finalPrice.toLocaleString() + ' تومان';
+    displayEl.style.color = '#4caf50';
+  } else {
+    displayEl.textContent = '۰ تومان';
+    displayEl.style.color = 'var(--primary)';
+  }
+}
+async function saveLiraRate() {
+  const rate = parseFloat(document.getElementById('liraToToman').value) || 5000;
+  if (rate < 100) { toast('نرخ باید بیشتر از ۱۰۰ باشد'); return; }
+  globalLiraRate = rate;
+  try { await db.collection('shop_settings').doc('pricing').set({ liraRate: globalLiraRate, updatedAt: new Date().toISOString() }, { merge: true }); updatePricingPreview(); toast('✅ نرخ لیر ذخیره شد!'); } catch(e){ toast('خطا در ذخیره'); }
+}
+function updatePricingPreview() {
+  const previewEl = document.getElementById('previewResult');
+  if (!previewEl) return;
+  const result = calculateProductFinalPrice(100, 450000, 35);
+  previewEl.textContent = result.toLocaleString();
+}
+
+function applyFilters(){
+  const term = (document.getElementById('shop-search')?.value||'').trim().toLowerCase();
+  const sort = document.getElementById('sort-select')?.value || 'default';
+  let list = [...allProducts];
+  if(currentMain) list = list.filter(p=>p.cat && p.cat.startsWith(currentMain+'-'));
+  if(currentSub) list = list.filter(p=>p.cat===currentSub);
+  if(term) list = list.filter(p=>p.name.toLowerCase().includes(term));
+  const finalPrice = p => p.discount>0 ? Math.round(p.price*(1-p.discount/100)) : p.price;
+  if(sort==='price-asc') list.sort((a,b)=>finalPrice(a)-finalPrice(b));
+  else if(sort==='price-desc') list.sort((a,b)=>finalPrice(b)-finalPrice(a));
+  else if(sort==='name-asc') list.sort((a,b)=>a.name.localeCompare(b.name,'fa'));
+  else if(sort==='discount') list.sort((a,b)=>(b.discount||0)-(a.discount||0));
+  renderProductsWithPagination(list);
+}
+function renderProductsWithPagination(list){
+  const totalPages = Math.ceil(list.length / itemsPerPage);
+  if (currentPage > totalPages) currentPage = totalPages || 1;
+  const start = (currentPage - 1) * itemsPerPage;
+  const pageItems = list.slice(start, start + itemsPerPage);
+  renderProducts(pageItems);
+  renderPagination(totalPages);
+}
+function renderProducts(list){
+  const grid = document.getElementById('products-grid');
+  if(list.length===0){ grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#888;padding:2rem">محصولی پیدا نشد</div>'; return; }
+  grid.innerHTML = list.map(p=>{
+    const hasDiscount = p.discount && p.discount>0;
+    const finalPrice = hasDiscount ? Math.round(p.price*(1-p.discount/100)) : p.price;
+    let stockBadge = p.stock<=0 ? '<span class="stock-badge stock-out">ناموجود</span>' : (p.stock<=3 ? `<span class="stock-badge stock-low">فقط ${p.stock} عدد</span>` : '<span class="stock-badge stock-ok">موجود</span>');
+    return `<div class="product-card"><img src="${p.img}" onclick="openLightbox('${(p.img||'').replace(/'/g,"\\'")}')" onerror="this.src='https://placehold.co/150x150/16213e/aaa?text=FitForge'"><h3>${p.name}</h3>${stockBadge}${hasDiscount?`<div style="text-decoration:line-through;color:#888;font-size:.8rem">${p.price.toLocaleString()}</div>`:''}<div class="price">${finalPrice.toLocaleString()} تومان</div><div style="font-size:.7rem;color:#888;margin:4px 0;">🚚 ارسال: ${(p.shippingCost||0).toLocaleString()} تومان</div><button class="btn-add" ${p.stock<=0?'disabled':''} onclick="addToCart('${p.id}')">${p.stock<=0?'ناموجود':'🛒 افزودن'}</button></div>`;
+  }).join('');
+}
+function renderPagination(totalPages){
+  const container = document.getElementById('pagination');
+  if(totalPages <= 1){ container.innerHTML = ''; return; }
+  let html = '';
+  if(currentPage > 1){ html += `<button class="page-btn" onclick="goToPage(${currentPage-1})">‹</button>`; }
+  const startPage = Math.max(1, currentPage - 2);
+  const endPage = Math.min(totalPages, currentPage + 2);
+  for(let i = startPage; i <= endPage; i++){ html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goToPage(${i})">${i}</button>`; }
+  if(currentPage < totalPages){ html += `<button class="page-btn" onclick="goToPage(${currentPage+1})">›</button>`; }
+  container.innerHTML = html;
+}
+function goToPage(page){ currentPage = page; applyFilters(); }
+function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+
+function addToCart(id){
+  const p = allProducts.find(x=>x.id===id);
+  if(!p || p.stock<=0) return;
+  const hasDiscount = p.discount && p.discount>0;
+  const finalPrice = hasDiscount ? Math.round(p.price*(1-p.discount/100)) : p.price;
+  cart.push({id, name:p.name, price:finalPrice, shippingCost: p.shippingCost || 0});
+  document.getElementById('cart-count').textContent = cart.length;
+  toast('به سبد اضافه شد');
+}
+function renderCart(){
+  let html='', total=0, totalShipping=0;
+  cart.forEach((item,i)=>{
+    html += `<p style="display:flex;justify-content:space-between;background:#1a1a2e;padding:.8rem;border-radius:6px;margin-bottom:.5rem;"><span>${i+1}. ${item.name}</span><span>${item.price.toLocaleString()} <button onclick="removeFromCart(${i})" style="background:none;border:none;color:#ff4d2e;cursor:pointer">✕</button></span></p>`;
+    total += item.price;
+    totalShipping += item.shippingCost;
+  });
+  document.getElementById('cart-items-list').innerHTML = html || '<p style="text-align:center;color:#aaa">سبد خرید خالی است</p>';
+  document.getElementById('total-price').textContent = (total + totalShipping).toLocaleString();
+}
+function removeFromCart(i){ cart.splice(i,1); document.getElementById('cart-count').textContent=cart.length; renderCart(); }
+function openCart(){document.getElementById('cart-modal').style.display='block';document.getElementById('step-1').style.display='block';document.getElementById('step-2').style.display='none';renderCart();}
+function closeCart(){document.getElementById('cart-modal').style.display='none';}
+function showStep2(){
+  if(cart.length===0){toast('سبد خرید خالی است');return;}
+  document.getElementById('step-1').style.display='none';
+  document.getElementById('step-2').style.display='block';
+  document.getElementById('cardInfoBox').innerHTML = `<div style="font-size:.85rem;margin-bottom:8px;">💳 پس از ثبت سفارش، مبلغ فاکتور را به کارت زیر واریز کنید:</div><div class="card-copy-row"><span class="card-num">${SHOP_SETTINGS.cardNumber}</span><button class="btn-copy" id="copyCardBtn" onclick="copyCardNumber()">کپی</button></div><div style="font-size:.8rem;color:#aaa;">به نام: ${SHOP_SETTINGS.cardName}</div>`;
+}
+function checkDiscount(){
+  const code = document.getElementById('c-discount').value.trim().toUpperCase();
+  const el = document.getElementById('discount-status');
+  if(!code){el.textContent='';return;}
+  if(discountCodes[code]!==undefined){el.innerHTML=`<span style="color:#4caf50">✓ کد معتبر — ${discountCodes[code]}٪ تخفیف</span>`;}
+  else{el.innerHTML='<span style="color:#ff4d2e">✗ کد نامعتبر</span>';}
+}
+function copyCardNumber(){
+  const num = SHOP_SETTINGS.cardNumber;
+  navigator.clipboard.writeText(num.replace(/-/g,'')).then(()=>{
+    const btn=document.getElementById('copyCardBtn');if(btn){btn.textContent='کپی شد ✓';btn.classList.add('ok');setTimeout(()=>{btn.textContent='کپی';btn.classList.remove('ok');},2000);}
+  }).catch(()=>{toast('شماره کارت کپی شد');});
+}
+
+async function finalizeOrder(platform){
+  const fname=document.getElementById('c-fname').value.trim();
+  const lname=document.getElementById('c-lname').value.trim();
+  const phone=document.getElementById('c-phone').value.trim();
+  const province=document.getElementById('c-province').value.trim();
+  const city=document.getElementById('c-city').value.trim();
+  const addr=document.getElementById('c-addr').value.trim();
+  const zip=document.getElementById('c-zip').value.trim();
+  if(!fname||!lname||!phone||!province||!city||!addr||!zip){toast('همه‌ی فیلدهای ستاره‌دار رو پر کن');return;}
+  const name=fname+' '+lname;
+  const code=document.getElementById('c-discount').value.trim().toUpperCase();
+  const rate=discountCodes[code]!==undefined?discountCodes[code]/100:0;
+  const baseTotal=cart.reduce((s,i)=>s+i.price,0);
+  const shippingTotal=cart.reduce((s,i)=>s+(i.shippingCost||0),0);
+  const discountAmount=Math.round(baseTotal*rate);
+  const finalTotal=baseTotal+shippingTotal-discountAmount;
+  const now = new Date();
+  const dateStr = `${now.getFullYear()-1979}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+  const randomNum = Math.floor(Math.random() * 900) + 100;
+  const orderCode = `FIT-${dateStr}-${randomNum}`;
+  let itemsList = cart.map((i, idx) => `${idx+1}. ${i.name} — ${i.price.toLocaleString()} تومان`).join('\n');
+  let msg = `🛒 سفارش جدید fitforge.ir\n📌 کد سفارش: ${orderCode}\n\n📦 اقلام:\n${itemsList}\n\n💰 جمع کل: ${baseTotal.toLocaleString()} تومان\n🚚 هزینه ارسال: ${shippingTotal.toLocaleString()} تومان\n`;
+  if(rate > 0) msg += `🎟️ کد تخفیف: ${code} (${discountAmount.toLocaleString()} تومان)\n`;
+  msg += `✅ مبلغ نهایی: ${finalTotal.toLocaleString()} تومان\n\n👤 خریدار: ${name}\n📞 تماس: ${phone}\n🏙️ استان/شهر: ${province} / ${city}\n🏠 آدرس: ${addr}\n📮 کد پستی: ${zip}\n`;
+  const enc = encodeURIComponent(msg);
+  
+  if(platform === 'telegram'){
+    window.open('https://t.me/' + SHOP_SETTINGS.telegram + '?text=' + enc, '_blank');
+  } else if(platform === 'whatsapp'){
+    const waUsername = SHOP_SETTINGS.whatsapp || 'fitforgeshop';
+    window.open('https://wa.me/' + waUsername + '?text=' + enc, '_blank');
+  }
+  
+  try {
+    await db.collection('shop_orders').add({orderCode, items: cart, baseTotal, shippingTotal, discountCode: code || null, discountAmount, finalTotal, name, phone, province, city, addr, zip, platform, status: 'pending', createdAt: now.toISOString()});
+  } catch(e){ console.error('Order save error:', e); }
+  closeCart();
+  cart = [];
+  document.getElementById('cart-count').textContent = 0;
+  toast('سفارش ثبت شد! کد: ' + orderCode);
+}
+
+// ===== ADMIN =====
+function openAdminPin(){document.getElementById('admin-pin-modal').style.display='block';}
+function closeAdminPin(){document.getElementById('admin-pin-modal').style.display='none';document.getElementById('adminPinInput').value='';}
+function checkAdminPin(){
+  const v=document.getElementById('adminPinInput').value.trim();
+  if(v===ADMIN_PIN){closeAdminPin();showPage('admin');showAdminTab('dashboard');}
+  else{toast('رمز اشتباهه');}
+}
+
+function showAdminTab(tab){
+  // مخفی کردن همه بخش‌ها با style مستقیم
+  document.querySelectorAll('.admin-panel-section').forEach(el => {
+    el.classList.remove('active');
+    el.style.display = 'none';
+  });
+  
+  // نمایش بخش انتخاب شده
+  const target = document.getElementById('admin-'+tab);
+  if(target){
+    target.classList.add('active');
+    target.style.display = 'block';
+  }
+  
+  // آپدیت ناوبری
+  document.querySelectorAll('.admin-nav-item').forEach(el=>el.classList.remove('active'));
+  const activeNav = document.querySelector(`.admin-nav-item[data-tab="${tab}"]`);
+  if(activeNav) activeNav.classList.add('active');
+  
+  // آپدیت عنوان
+  const titles={'dashboard':'📊 داشبورد','products':'📦 مدیریت محصولات','orders':'📋 سفارش‌ها','customers':'👥 مشتریان','discounts':'🎟️ تخفیف‌ها','banners':'🎨 بنرها','settings':'⚙️ تنظیمات'};
+  document.getElementById('adminPageTitle').textContent = titles[tab] || tab;
+  
+  // بارگذاری داده‌ها
+  switch(tab){
+    case 'dashboard': renderDashboard();break;
+    case 'products': renderAdminProducts();checkImportStatus();break;
+    case 'orders': renderOrders();break;
+    case 'customers': renderCustomers();break;
+    case 'discounts': renderDiscounts();break;
+    case 'banners': loadBannerForm();break;
+    case 'settings': loadSettings();break;
+  }
+}
+
+async function renderDashboard(){
+  const container=document.getElementById('admin-dashboard-content');
+  container.innerHTML='<div class="loading-spinner">⏳ در حال بارگذاری...</div>';
+  try{
+    const ordersSnap=await db.collection('shop_orders').get();
+    const orders=ordersSnap.docs.map(d=>d.data());
+    const productsSnap=await db.collection('shop_products').get();
+    const products=productsSnap.docs.map(d=>d.data());
+    const totalSales=orders.filter(o=>o.status==='approved').reduce((sum,o)=>sum+(o.finalTotal||0),0);
+    const totalOrders=orders.length;
+    const pendingOrders=orders.filter(o=>o.status==='pending').length;
+    const approvedOrders=orders.filter(o=>o.status==='approved').length;
+    const cancelledOrders=orders.filter(o=>o.status==='cancelled').length;
+    const totalProducts=products.length;
+    const totalCustomers=new Set(orders.map(o=>o.phone)).size;
+    let totalProfit = 0;
+    for (const order of orders.filter(o=>o.status==='approved')) {
+      for (const item of order.items || []) {
+        const product = products.find(p => p.id === item.id);
+        if (product && product.priceLira) {
+          const basePrice = Math.ceil((product.priceLira * globalLiraRate) / 1000) * 1000;
+          const costPrice = basePrice + (product.shippingCost || 0);
+          totalProfit += (item.price - costPrice);
+        }
+      }
+    }
+    document.getElementById('productCount').textContent=totalProducts;
+    document.getElementById('orderCount').textContent=pendingOrders;
+    container.innerHTML=`<div class="dashboard-stats"><div class="stat-card"><div class="stat-number">${totalSales.toLocaleString()}</div><div class="stat-label">💰 فروش تایید شده</div></div><div class="stat-card"><div class="stat-number">${totalOrders}</div><div class="stat-label">📦 کل سفارش‌ها</div></div><div class="stat-card"><div class="stat-number" style="color:#f39c12">${pendingOrders}</div><div class="stat-label">⏳ در انتظار</div></div><div class="stat-card"><div class="stat-number" style="color:#4caf50">${approvedOrders}</div><div class="stat-label">✅ تایید شده</div></div><div class="stat-card"><div class="stat-number" style="color:#ff6b6b">${cancelledOrders}</div><div class="stat-label">❌ لغو شده</div></div><div class="stat-card"><div class="stat-number">${totalCustomers}</div><div class="stat-label">👥 مشتریان</div></div><div class="stat-card"><div class="stat-number">${totalProducts}</div><div class="stat-label">📦 محصولات</div></div><div class="stat-card"><div class="stat-number" style="color:#ffd700">${totalProfit.toLocaleString()}</div><div class="stat-label">💎 سود کل</div></div></div>`;
+  }catch(e){container.innerHTML='<div class="loading-spinner">❌ خطا در بارگذاری</div>';}
+}
+
+function renderAdminProducts(){
+  const term=(document.getElementById('adminSearch')?.value||'').toLowerCase();
+  const list=allProducts.filter(p=>p.name.toLowerCase().includes(term));
+  const box=document.getElementById('admin-products-list');
+  if(list.length===0){box.innerHTML='<p style="color:#888;text-align:center;padding:2rem;">محصولی یافت نشد</p>';return;}
+  box.innerHTML=list.slice(0,150).map(p=>`<div class="admin-product-row"><img src="${p.img}" onerror="this.src='https://placehold.co/60x60/16213e/aaa?text=FF'"><div class="info"><b>${p.name}</b><br><span style="color:#888;font-size:.8rem">🔸 لیر: ${p.priceLira?.toLocaleString() || '۰'} TRY<br>🔹 تومان: ${p.price.toLocaleString()}<br>🚚 ارسال: ${(p.shippingCost||0).toLocaleString()}<br>📈 سود: ${p.profitPercent||0}%<br>📦 موجودی: ${p.stock}</span></div><div class="actions"><button class="btn-small btn-edit" onclick="openProductForm('${p.id}')">ویرایش</button><button class="btn-small btn-del" onclick="deleteProduct('${p.id}')">حذف</button></div></div>`).join('');
+}
+function openProductForm(id){
+  editingProductId=id;
+  const catSelect=document.getElementById('pf-cat');
+  catSelect.innerHTML=Object.keys(CATS).flatMap(mk=>Object.keys(CATS[mk].subs).map(sk=>`<option value="${sk}">${CATS[mk].label} - ${CATS[mk].subs[sk]}</option>`)).join('');
+  if(id){
+    const p=allProducts.find(x=>x.id===id);
+    document.getElementById('pf-title').textContent='ویرایش محصول';
+    document.getElementById('pf-name').value=p.name;
+    document.getElementById('pf-price-lira').value=p.priceLira||0;
+    document.getElementById('pf-shipping').value=p.shippingCost||0;
+    document.getElementById('pf-profit').value=p.profitPercent||35;
+    document.getElementById('pf-img').value=p.img;
+    document.getElementById('pf-img2').value=p.img2||'';
+    document.getElementById('pf-flavors').value=p.flavors||'';
+    catSelect.value=p.cat;
+    document.getElementById('pf-discount').value=p.discount||0;
+    document.getElementById('pf-stock').value=p.stock;
+    document.getElementById('pf-desc').value=p.desc||'';
+    calculateProductPrice();
+  }else{
+    document.getElementById('pf-title').textContent='محصول جدید';
+    ['pf-name','pf-price-lira','pf-shipping','pf-img','pf-img2','pf-flavors','pf-desc'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('pf-discount').value=0;
+    document.getElementById('pf-stock').value=10;
+    document.getElementById('pf-profit').value=35;
+    document.getElementById('pf-price-toman-display').textContent='۰ تومان';
+  }
+  document.getElementById('product-form-modal').style.display='block';
+}
+function closeProductForm(){document.getElementById('product-form-modal').style.display='none';}
+async function saveProductForm(){
+  const liraPrice = parseFloat(document.getElementById('pf-price-lira').value) || 0;
+  const shippingCost = parseFloat(document.getElementById('pf-shipping').value) || 0;
+  const profitPercent = parseFloat(document.getElementById('pf-profit').value) || 0;
+  const finalPrice = calculateProductFinalPrice(liraPrice, shippingCost, profitPercent);
+  const data={
+    name:document.getElementById('pf-name').value.trim(),
+    priceLira: liraPrice, shippingCost: shippingCost, profitPercent: profitPercent, price: finalPrice,
+    img:document.getElementById('pf-img').value.trim(),
+    img2:document.getElementById('pf-img2').value.trim(),
+    flavors:document.getElementById('pf-flavors').value.trim(),
+    cat:document.getElementById('pf-cat').value,
+    discount:parseInt(document.getElementById('pf-discount').value)||0,
+    stock:parseInt(document.getElementById('pf-stock').value)||0,
+    desc:document.getElementById('pf-desc').value.trim()
+  };
+  if(!data.name||!data.priceLira){toast('اسم و قیمت لیر رو پر کن');return;}
+  try{
+    if(editingProductId){await db.collection('shop_products').doc(editingProductId).update(data);}
+    else{await db.collection('shop_products').add(data);}
+    toast('ذخیره شد');
+    closeProductForm();
+    await loadProducts();
+    renderAdminProducts();
+    applyFilters();
+  }catch(e){toast('خطا در ذخیره');}
+}
+async function deleteProduct(id){
+  if(!confirm('این محصول حذف بشه؟')) return;
+  try { await db.collection('shop_products').doc(id).delete(); } catch(e){}
+  await loadProducts();
+  renderAdminProducts();
+  applyFilters();
+  toast('حذف شد');
+}
+
+async function renderOrders(){
+  const box=document.getElementById('orders-list');
+  box.innerHTML='در حال بارگذاری...';
+  try{
+    const snap=await db.collection('shop_orders').orderBy('createdAt','desc').get();
+    const orders=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const filter=document.getElementById('orderFilter')?.value||'all';
+    const filtered=filter==='all'?orders:orders.filter(o=>o.status===filter);
+    if(filtered.length===0){box.innerHTML='<p style="color:#888;text-align:center;padding:2rem;">سفارشی ثبت نشده</p>';return;}
+    box.innerHTML=filtered.map(o=>{
+      const statusText = o.status==='approved' ? '✅ تایید شده' : (o.status==='cancelled' ? '❌ لغو شده' : '⏳ در انتظار');
+      const statusClass = o.status==='approved' ? 'status-approved' : (o.status==='cancelled' ? 'status-cancelled' : 'status-pending');
+      return `<div class="order-card">
+        <b>${o.orderCode}</b> — <span class="order-status-badge ${statusClass}">${statusText}</span><br>
+        👤 ${o.name} — 📞 ${o.phone}<br>
+        🏠 ${o.addr}<br>
+        💰 ${o.finalTotal.toLocaleString()} تومان (${o.items.length} قلم)<br>
+        🚚 هزینه ارسال: ${(o.shippingTotal||0).toLocaleString()} تومان<br>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+          <button class="btn-small btn-approve" onclick="setOrderStatus('${o.id}','approved')">✅ تایید و ثبت</button>
+          <button class="btn-small btn-pending" onclick="setOrderStatus('${o.id}','pending')">⏳ در انتظار</button>
+          <button class="btn-small btn-del" onclick="cancelOrder('${o.id}')">❌ لغو و حذف</button>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){box.innerHTML='<p style="color:#888">خطا در بارگذاری سفارش‌ها</p>';}
+}
+async function setOrderStatus(id, status){
+  try { await db.collection('shop_orders').doc(id).update({status}); toast('وضعیت تغییر کرد'); renderOrders(); } catch(e){ toast('خطا'); }
+}
+async function cancelOrder(id){
+  if(!confirm('این سفارش کاملاً حذف بشه؟')) return;
+  try { await db.collection('shop_orders').doc(id).delete(); toast('سفارش حذف شد'); renderOrders(); } catch(e){ toast('خطا'); }
+}
+
+async function renderCustomers(){
+  const container=document.getElementById('customers-list');
+  container.innerHTML='⏳ در حال بارگذاری...';
+  try{
+    const ordersSnap=await db.collection('shop_orders').get();
+    const orders=ordersSnap.docs.map(d=>d.data());
+    const customersMap={};
+    orders.forEach(o=>{
+      if(!customersMap[o.phone]){customersMap[o.phone]={name:o.name,phone:o.phone,orders:0,total:0};}
+      customersMap[o.phone].orders++;
+      customersMap[o.phone].total+=o.finalTotal||0;
+    });
+    const customers=Object.values(customersMap).sort((a,b)=>b.total-a.total);
+    if(customers.length===0){container.innerHTML='<p style="color:#888;text-align:center;padding:2rem;">هنوز مشتری ثبت نشده</p>';return;}
+    container.innerHTML=`<table class="rt"><tr><th>#</th><th>نام</th><th>شماره</th><th>تعداد سفارش</th><th>کل خرید</th></tr>${customers.map((c,i)=>`<tr><td>${i+1}</td><td>${c.name}</td><td>${c.phone}</td><td>${c.orders}</td><td>${c.total.toLocaleString()} تومان</td></tr>`).join('')}</table>`;
+  }catch(e){container.innerHTML='<p style="color:#888">خطا در بارگذاری</p>';}
+}
+
+function renderDiscounts(){
+  const container=document.getElementById('discounts-list');
+  const keys=Object.keys(discountCodes);
+  if(keys.length===0){container.innerHTML='<p style="color:#888;text-align:center;padding:2rem;">کد تخفیفی ثبت نشده</p>';return;}
+  container.innerHTML=`<div class="discount-grid">${keys.map(k=>`<div class="discount-card"><div class="discount-code">${k}</div><div class="discount-rate">${discountCodes[k]}% تخفیف</div><button class="btn-small btn-del" onclick="deleteCode('${k}')">حذف</button></div>`).join('')}</div>`;
+}
+function openDiscountForm(){
+  const code=prompt('کد تخفیف را وارد کنید (مثلاً: SUMMER20):');
+  if(!code)return;
+  const rate=prompt('درصد تخفیف را وارد کنید (عدد):');
+  if(!rate||isNaN(rate))return;
+  addDiscountCodeDirect(code.toUpperCase(), parseInt(rate));
+}
+async function addDiscountCodeDirect(name, rate){
+  try { await db.collection('shop_discountCodes').doc(name).set({rate}); await loadDiscountCodes(); renderDiscounts(); toast('کد اضافه شد'); } catch(e){ toast('خطا در ذخیره'); }
+}
+async function deleteCode(name){
+  try { await db.collection('shop_discountCodes').doc(name).delete(); } catch(e){}
+  await loadDiscountCodes();
+  renderDiscounts();
+}
+
+function loadSettings(){
+  document.getElementById('setPin').value=ADMIN_PIN;
+  document.getElementById('setCard').value=SHOP_SETTINGS.cardNumber||'';
+  document.getElementById('setCardName').value=SHOP_SETTINGS.cardName||'';
+  document.getElementById('setTelegram').value=SHOP_SETTINGS.telegram||'';
+  document.getElementById('setWhatsapp').value=SHOP_SETTINGS.whatsapp||'';
+  document.getElementById('liraToToman').value=globalLiraRate||5000;
+  updatePricingPreview();
+}
+async function saveAllSettings(){
+  const pin=document.getElementById('setPin').value.trim();
+  if(pin.length!==4){toast('رمز باید ۴ رقم باشه');return;}
+  ADMIN_PIN=pin;
+  SHOP_SETTINGS={...SHOP_SETTINGS,
+    cardNumber:document.getElementById('setCard').value.trim(),
+    cardName:document.getElementById('setCardName').value.trim(),
+    telegram:document.getElementById('setTelegram').value.trim(),
+    whatsapp:document.getElementById('setWhatsapp').value.trim(),
+    instagram:document.getElementById('ban-insta')?.value.trim() || SHOP_SETTINGS.instagram,
+    instagramLogo:document.getElementById('ban-insta-logo')?.value.trim() || SHOP_SETTINGS.instagramLogo
+  };
+  try { 
+    await db.collection('shop_settings').doc('app').set({pin:ADMIN_PIN,...SHOP_SETTINGS},{merge:true}); 
+    updateSocialLinks(); 
+    toast('✅ تمام تنظیمات ذخیره شد!'); 
+  } catch(e){ toast('خطا در ذخیره'); }
+}
+
+async function checkImportStatus(){
+  const box=document.getElementById('importBox');
+  if(!box)return;
+  box.innerHTML=`<div class="import-warn">دیتابیس <b>${allProducts.length}</b> محصول دارد. <button class="btn-full green" onclick="runImport()" style="margin-top:6px;">بروزرسانی کامل محصولات</button></div>`;
+}
+async function runImport(){
+  if(!confirm('همه محصولات پاک و با لیست جدید جایگزین میشه؟'))return;
+  try {
+    const oldSnap=await db.collection('shop_products').get();
+    const oldDocs=oldSnap.docs;
+    for(let i=0;i<oldDocs.length;i+=400){const batch=db.batch();oldDocs.slice(i,i+400).forEach(d=>batch.delete(d.ref));await batch.commit();}
+    for(let i=0;i<SEED_PRODUCTS.length;i+=400){const batch=db.batch();SEED_PRODUCTS.slice(i,i+400).forEach(p=>{const ref=db.collection('shop_products').doc();batch.set(ref,p);});await batch.commit();}
+    toast('بروزرسانی تمام شد!');
+    await loadProducts();
+    applyFilters();
+    checkImportStatus();
+  } catch(e){ toast('خطا در بروزرسانی'); }
+}
+
+async function loadProducts(){
+  const cached = localStorage.getItem('ff_products_cache');
+  if(cached){
+    try{ allProducts = JSON.parse(cached); renderMainCats(); applyFilters(); renderDiscountTrack(); }catch(e){}
+  }
+  try{
+    const snap = await db.collection('shop_products').get();
+    allProducts = snap.docs.map(d=>({id:d.id,...d.data()}));
+    localStorage.setItem('ff_products_cache', JSON.stringify(allProducts));
+    renderMainCats();
+    applyFilters();
+    renderDiscountTrack();
+  }catch(e){ console.error('Firebase Error:', e); if(!cached) toast('⚠️ خطا در ارتباط با سرور'); }
+}
+async function loadDiscountCodes(){
+  try{
+    const snap=await db.collection('shop_discountCodes').get();
+    discountCodes={};
+    snap.docs.forEach(d=>discountCodes[d.id]=d.data().rate);
+  }catch(e){discountCodes={};}
+}
+function updateAdminDate(){
+  const el=document.getElementById('adminDate');
+  if(!el)return;
+  const now=new Date();
+  el.textContent=now.toLocaleDateString('fa-IR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+
+async function init(){
+  try{
+    const s=await db.collection('shop_settings').doc('app').get();
+    if(s.exists){
+      const d=s.data();
+      ADMIN_PIN=d.pin||ADMIN_PIN;
+      SHOP_SETTINGS={...SHOP_SETTINGS,...d};
+    }else{await db.collection('shop_settings').doc('app').set({pin:ADMIN_PIN,...SHOP_SETTINGS});}
+    const pricingDoc=await db.collection('shop_settings').doc('pricing').get();
+    if(pricingDoc.exists){ globalLiraRate=pricingDoc.data().liraRate||5000; }
+    document.getElementById('liraToToman').value=globalLiraRate;
+    updatePricingPreview();
+  }catch(e){console.error(e);}
+  await loadBannerSettings();
+  await loadDiscountCodes();
+  await loadProducts();
+  renderMainCats();
+  document.getElementById('loadingMsg').style.display='none';
+  applyFilters();
+  renderDiscountTrack();
+  updateSocialLinks();
+  setTimeout(()=>{
+    const ls=document.getElementById('loading-screen');
+    if(ls){ls.classList.add('hidden');setTimeout(()=>ls.remove(),700);}
+    if(window.lucide) lucide.createIcons();
+    updateAdminDate();
+    setInterval(updateAdminDate,60000);
+  },800);
+}
+
+window.onload=function(){init();};
+</script>
+</body>
+</html>
