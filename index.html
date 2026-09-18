@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="zZzsaStQtPOzocJhJYgT3TvTmch3yGMpFzDnAJeQ_Gs" />
 <title>fitforge.ir | فروشگاه</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Tahoma,sans-serif;}
@@ -630,8 +631,6 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-
-// ===== ImgBB API Key =====
 const IMGBB_API_KEY = '897003a654c24c0384d85bdb548d47d0';
 
 const CATS = {
@@ -652,7 +651,6 @@ let editingProductId = null;
 let globalLiraRate = 5000;
 let currentPage = 1;
 const itemsPerPage = 20;
-
 let currentDetailProduct = null;
 let currentDetailQty = 1;
 let currentDetailFlavor = null;
@@ -669,22 +667,14 @@ let bannerSettings = {
   text: 'فروشگاه ورزشی',
   btn: 'ورود به فروشگاه'
 };
-
 let floatingPairIndex = 0;
 let floatingTimer = null;
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');window.scrollTo(0,0);history.pushState({page:id},'',location.href);}
-
-function toggleTheme(){
-  const isLight = document.documentElement.classList.toggle('light');
-  localStorage.setItem('ff_theme', isLight?'light':'dark');
-  const lbl = document.getElementById('themeLabel');
-  if(lbl) lbl.textContent = isLight ? 'حالت تاریک' : 'حالت روشن';
-}
+function toggleTheme(){const isLight = document.documentElement.classList.toggle('light');localStorage.setItem('ff_theme', isLight?'light':'dark');const lbl = document.getElementById('themeLabel');if(lbl) lbl.textContent = isLight ? 'حالت تاریک' : 'حالت روشن';}
 function applyThemeFromStorage(){const t=localStorage.getItem('ff_theme');if(t==='light') document.documentElement.classList.add('light');}
 applyThemeFromStorage();
-
 function openSideMenu(){document.getElementById('sideMenu').classList.add('open');document.getElementById('sideOverlay').classList.add('open');}
 function closeSideMenu(){document.getElementById('sideMenu').classList.remove('open');document.getElementById('sideOverlay').classList.remove('open');}
 function toggleAdminSidebar(){document.getElementById('adminSidebar').classList.toggle('open');}
@@ -806,26 +796,11 @@ function renderFloatingPairsList(){
   const container = document.getElementById('floating-images-list');
   if(!container) return;
   const pairs = bannerSettings.floatingPairs || [];
-  container.innerHTML = pairs.map((pair, i) => `
-    <div class="floating-pair" data-index="${i}">
-      <span class="pair-label">${i+1}.</span>
-      <input type="text" class="pair-left" placeholder="لینک عکس چپ" value="${pair.left || ''}">
-      <input type="text" class="pair-right" placeholder="لینک عکس راست" value="${pair.right || ''}">
-      <button class="remove-btn" onclick="removeFloatingPair(${i})">✕</button>
-    </div>
-  `).join('');
+  container.innerHTML = pairs.map((pair, i) => `<div class="floating-pair" data-index="${i}"><span class="pair-label">${i+1}.</span><input type="text" class="pair-left" placeholder="لینک عکس چپ" value="${pair.left || ''}"><input type="text" class="pair-right" placeholder="لینک عکس راست" value="${pair.right || ''}"><button class="remove-btn" onclick="removeFloatingPair(${i})">✕</button></div>`).join('');
   if(pairs.length === 0){ container.innerHTML = '<p style="color:#888;text-align:center;padding:1rem;">هنوز جفت عکسی اضافه نشده</p>'; }
 }
-function addFloatingPair(){
-  if(!bannerSettings.floatingPairs) bannerSettings.floatingPairs = [];
-  bannerSettings.floatingPairs.push({ left: '', right: '' });
-  renderFloatingPairsList();
-}
-function removeFloatingPair(index){
-  if(!confirm('این جفت عکس حذف بشه؟')) return;
-  bannerSettings.floatingPairs.splice(index, 1);
-  renderFloatingPairsList();
-}
+function addFloatingPair(){ if(!bannerSettings.floatingPairs) bannerSettings.floatingPairs = []; bannerSettings.floatingPairs.push({ left: '', right: '' }); renderFloatingPairsList(); }
+function removeFloatingPair(index){ if(!confirm('این جفت عکس حذف بشه؟')) return; bannerSettings.floatingPairs.splice(index, 1); renderFloatingPairsList(); }
 function uploadBannerImage(input, targetId){
   const file = input.files[0];
   if(!file) return;
@@ -840,7 +815,6 @@ function uploadBannerImage(input, targetId){
   };
   reader.readAsDataURL(file);
 }
-
 async function uploadProductImage(input, targetFieldId, progressId){
   const file = input.files[0];
   if(!file) return;
@@ -848,14 +822,10 @@ async function uploadProductImage(input, targetFieldId, progressId){
   progressEl.classList.add('show');
   progressEl.textContent = '⏳ در حال آپلود...';
   progressEl.style.color = '#4caf50';
-  
   try {
     const formData = new FormData();
     formData.append('image', file);
-    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-      method: 'POST',
-      body: formData
-    });
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
     const data = await res.json();
     if(data.success){
       document.getElementById(targetFieldId).value = data.data.url;
@@ -874,7 +844,6 @@ async function uploadProductImage(input, targetFieldId, progressId){
     reader.readAsDataURL(file);
   }
 }
-
 function renderDiscountTrack(){
   const track = document.getElementById('discountTrack');
   if(!track) return;
@@ -885,11 +854,7 @@ function renderDiscountTrack(){
     return `<div class="d-mini" onclick="openProductDetail('${p.id}')"><img src="${p.img}" onerror="this.src='https://placehold.co/90x90/16213e/aaa?text=FF'"><div class="d-badge">%${p.discount}</div><h4>${p.name.slice(0,30)}</h4><div class="op">${p.price.toLocaleString()}</div><div class="np">${final.toLocaleString()} تومان</div></div>`;
   }).join('');
 }
-
-function renderMainCats(){
-  const box = document.getElementById('mainCats');
-  box.innerHTML = '<button class="btn-cat active-cat" onclick="filterMain(null,this)">همه</button>' + Object.keys(CATS).map(k=>`<button class="btn-cat" onclick="filterMain('${k}',this)">${CATS[k].label}</button>`).join('');
-}
+function renderMainCats(){ const box = document.getElementById('mainCats'); box.innerHTML = '<button class="btn-cat active-cat" onclick="filterMain(null,this)">همه</button>' + Object.keys(CATS).map(k=>`<button class="btn-cat" onclick="filterMain('${k}',this)">${CATS[k].label}</button>`).join(''); }
 function filterMain(main, btn){
   document.querySelectorAll('.shop-main-cats .btn-cat').forEach(b=>b.classList.remove('active-cat'));
   btn.classList.add('active-cat');
@@ -897,32 +862,17 @@ function filterMain(main, btn){
   const subBox = document.getElementById('subCats');
   if(!main){ subBox.style.display='none';}
   else{ subBox.style.display='flex'; subBox.innerHTML = '<button class="btn-sub-cat active-sub" onclick="filterSub(null,this)">همه</button>' + Object.keys(CATS[main].subs).map(k=>`<button class="btn-sub-cat" onclick="filterSub('${k}',this)">${CATS[main].subs[k]}</button>`).join(''); }
-  currentPage = 1;
-  applyFilters();
+  currentPage = 1; applyFilters();
 }
-function filterSub(sub, btn){
-  document.querySelectorAll('.btn-sub-cat').forEach(b=>b.classList.remove('active-sub'));
-  btn.classList.add('active-sub');
-  currentSub = sub;
-  currentPage = 1;
-  applyFilters();
-}
-function goShopWithCat(main){
-  showPage('shop');
-  setTimeout(()=>{
-    const btn = [...document.querySelectorAll('.shop-main-cats .btn-cat')].find(b=>b.textContent.trim()===CATS[main].label);
-    if(btn) filterMain(main, btn);
-  }, 50);
-}
-
+function filterSub(sub, btn){ document.querySelectorAll('.btn-sub-cat').forEach(b=>b.classList.remove('active-sub')); btn.classList.add('active-sub'); currentSub = sub; currentPage = 1; applyFilters(); }
+function goShopWithCat(main){ showPage('shop'); setTimeout(()=>{ const btn = [...document.querySelectorAll('.shop-main-cats .btn-cat')].find(b=>b.textContent.trim()===CATS[main].label); if(btn) filterMain(main, btn); }, 50); }
 function calculateProductFinalPrice(liraPrice, shippingCost, profitPercent) {
   if (!liraPrice || liraPrice <= 0) return 0;
   const baseToman = liraPrice * globalLiraRate;
   const roundedToman = Math.ceil(baseToman / 1000) * 1000;
   const withShipping = roundedToman + (shippingCost || 0);
   const profit = Math.round(withShipping * ((profitPercent || 0) / 100));
-  const finalPrice = withShipping + profit;
-  return Math.ceil(finalPrice / 1000) * 1000;
+  return Math.ceil((withShipping + profit) / 1000) * 1000;
 }
 function calculateProductPrice() {
   const liraInput = document.getElementById('pf-price-lira');
@@ -933,14 +883,8 @@ function calculateProductPrice() {
   const lira = parseFloat(liraInput.value) || 0;
   const shipping = parseFloat(shippingInput.value) || 0;
   const profit = parseFloat(profitInput.value) || 0;
-  if (lira > 0) {
-    const finalPrice = calculateProductFinalPrice(lira, shipping, profit);
-    displayEl.textContent = finalPrice.toLocaleString() + ' تومان';
-    displayEl.style.color = '#4caf50';
-  } else {
-    displayEl.textContent = '۰ تومان';
-    displayEl.style.color = 'var(--primary)';
-  }
+  if (lira > 0) { displayEl.textContent = calculateProductFinalPrice(lira, shipping, profit).toLocaleString() + ' تومان'; displayEl.style.color = '#4caf50'; }
+  else { displayEl.textContent = '۰ تومان'; displayEl.style.color = 'var(--primary)'; }
 }
 async function saveLiraRate() {
   const rate = parseFloat(document.getElementById('liraToToman').value) || 5000;
@@ -948,13 +892,7 @@ async function saveLiraRate() {
   globalLiraRate = rate;
   try { await db.collection('shop_settings').doc('pricing').set({ liraRate: globalLiraRate, updatedAt: new Date().toISOString() }, { merge: true }); updatePricingPreview(); toast('✅ نرخ لیر ذخیره شد!'); } catch(e){ toast('خطا در ذخیره'); }
 }
-function updatePricingPreview() {
-  const previewEl = document.getElementById('previewResult');
-  if (!previewEl) return;
-  const result = calculateProductFinalPrice(100, 450000, 35);
-  previewEl.textContent = result.toLocaleString();
-}
-
+function updatePricingPreview() { const previewEl = document.getElementById('previewResult'); if (!previewEl) return; previewEl.textContent = calculateProductFinalPrice(100, 450000, 35).toLocaleString(); }
 function applyFilters(){
   const term = (document.getElementById('shop-search')?.value||'').trim().toLowerCase();
   const sort = document.getElementById('sort-select')?.value || 'default';
@@ -973,8 +911,7 @@ function renderProductsWithPagination(list){
   const totalPages = Math.ceil(list.length / itemsPerPage);
   if (currentPage > totalPages) currentPage = totalPages || 1;
   const start = (currentPage - 1) * itemsPerPage;
-  const pageItems = list.slice(start, start + itemsPerPage);
-  renderProducts(pageItems);
+  renderProducts(list.slice(start, start + itemsPerPage));
   renderPagination(totalPages);
 }
 function renderProducts(list){
@@ -1001,7 +938,6 @@ function renderPagination(totalPages){
 function goToPage(page){ currentPage = page; applyFilters(); }
 function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
-
 function openProductDetail(id){
   const p = allProducts.find(x=>x.id===id);
   if(!p) return;
@@ -1011,64 +947,33 @@ function openProductDetail(id){
   document.getElementById('pd-title').textContent = p.name;
   const hasDiscount = p.discount && p.discount>0;
   const finalPrice = hasDiscount ? Math.round(p.price*(1-p.discount/100)) : p.price;
-  const priceHTML = hasDiscount ? `${finalPrice.toLocaleString()} تومان <span class="old-price">${p.price.toLocaleString()}</span>` : `${finalPrice.toLocaleString()} تومان`;
-  document.getElementById('pd-price').innerHTML = priceHTML;
+  document.getElementById('pd-price').innerHTML = hasDiscount ? `${finalPrice.toLocaleString()} تومان <span class="old-price">${p.price.toLocaleString()}</span>` : `${finalPrice.toLocaleString()} تومان`;
   const stockEl = document.getElementById('pd-stock');
   if(p.stock <= 0){ stockEl.className = 'product-detail-stock stock-out'; stockEl.textContent = '❌ ناموجود'; }
   else if(p.stock <= 3){ stockEl.className = 'product-detail-stock stock-low'; stockEl.textContent = `⚠️ فقط ${p.stock} عدد در انبار`; }
   else { stockEl.className = 'product-detail-stock stock-ok'; stockEl.textContent = '✅ موجود در انبار'; }
-  const mainImg = document.getElementById('pd-main-img');
-  mainImg.src = p.img || 'https://placehold.co/400x400/16213e/aaa?text=No+Image';
+  document.getElementById('pd-main-img').src = p.img || 'https://placehold.co/400x400/16213e/aaa?text=No+Image';
   const thumbsEl = document.getElementById('pd-thumbs');
-  const images = [p.img];
-  if(p.img2) images.push(p.img2);
-  if(images.length > 1){
-    thumbsEl.innerHTML = images.map((img, i) => `<img src="${img}" class="${i===0?'active':''}" onclick="changeDetailImage(this, '${img.replace(/'/g,"\\'")}')">`).join('');
-  } else { thumbsEl.innerHTML = ''; }
+  const images = [p.img]; if(p.img2) images.push(p.img2);
+  thumbsEl.innerHTML = images.length > 1 ? images.map((img, i) => `<img src="${img}" class="${i===0?'active':''}" onclick="changeDetailImage(this, '${img.replace(/'/g,"\\'")}')">`).join('') : '';
   const flavorsSection = document.getElementById('pd-flavors-section');
   const flavorsEl = document.getElementById('pd-flavors');
   if(p.flavors && p.flavors.trim()){
     const flavors = p.flavors.split(',').map(f=>f.trim()).filter(f=>f);
-    if(flavors.length > 0){
-      flavorsSection.style.display = 'block';
-      flavorsEl.innerHTML = flavors.map(f => `<button class="flavor-btn" onclick="selectDetailFlavor(this, '${f.replace(/'/g,"\\'")}')">${f}</button>`).join('');
-    } else { flavorsSection.style.display = 'none'; }
+    if(flavors.length > 0){ flavorsSection.style.display = 'block'; flavorsEl.innerHTML = flavors.map(f => `<button class="flavor-btn" onclick="selectDetailFlavor(this, '${f.replace(/'/g,"\\'")}')">${f}</button>`).join(''); }
+    else { flavorsSection.style.display = 'none'; }
   } else { flavorsSection.style.display = 'none'; }
   const descEl = document.getElementById('pd-desc');
-  if(p.desc && p.desc.trim()){ descEl.textContent = p.desc; descEl.style.display = 'block'; }
-  else { descEl.style.display = 'none'; }
+  if(p.desc && p.desc.trim()){ descEl.textContent = p.desc; descEl.style.display = 'block'; } else { descEl.style.display = 'none'; }
   document.getElementById('pd-qty').textContent = '1';
   document.getElementById('product-detail-page').classList.add('open');
   document.body.style.overflow = 'hidden';
   history.pushState({detail: p.id}, '', location.href);
 }
-
-function closeProductDetail(){
-  document.getElementById('product-detail-page').classList.remove('open');
-  document.body.style.overflow = '';
-  currentDetailProduct = null;
-  currentDetailQty = 1;
-  currentDetailFlavor = null;
-}
-
-function changeDetailQty(delta){
-  if(!currentDetailProduct) return;
-  const newQty = currentDetailQty + delta;
-  if(newQty < 1) return;
-  if(newQty > currentDetailProduct.stock){ toast('بیشتر از موجودی نمی‌تونی انتخاب کنی'); return; }
-  currentDetailQty = newQty;
-  document.getElementById('pd-qty').textContent = newQty;
-}
-function selectDetailFlavor(btn, flavor){
-  document.querySelectorAll('#pd-flavors .flavor-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
-  currentDetailFlavor = flavor;
-}
-function changeDetailImage(imgEl, src){
-  document.querySelectorAll('#pd-thumbs img').forEach(i=>i.classList.remove('active'));
-  imgEl.classList.add('active');
-  document.getElementById('pd-main-img').src = src;
-}
+function closeProductDetail(){ document.getElementById('product-detail-page').classList.remove('open'); document.body.style.overflow = ''; currentDetailProduct = null; currentDetailQty = 1; currentDetailFlavor = null; }
+function changeDetailQty(delta){ if(!currentDetailProduct) return; const newQty = currentDetailQty + delta; if(newQty < 1) return; if(newQty > currentDetailProduct.stock){ toast('بیشتر از موجودی نمی‌تونی انتخاب کنی'); return; } currentDetailQty = newQty; document.getElementById('pd-qty').textContent = newQty; }
+function selectDetailFlavor(btn, flavor){ document.querySelectorAll('#pd-flavors .flavor-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); currentDetailFlavor = flavor; }
+function changeDetailImage(imgEl, src){ document.querySelectorAll('#pd-thumbs img').forEach(i=>i.classList.remove('active')); imgEl.classList.add('active'); document.getElementById('pd-main-img').src = src; }
 function addDetailToCart(){
   if(!currentDetailProduct) return;
   const p = currentDetailProduct;
@@ -1076,18 +981,13 @@ function addDetailToCart(){
   if(p.flavors && p.flavors.trim() && !currentDetailFlavor){ toast('لطفاً طعم/رنگ رو انتخاب کن'); return; }
   const hasDiscount = p.discount && p.discount>0;
   const finalPrice = hasDiscount ? Math.round(p.price*(1-p.discount/100)) : p.price;
-  // چک کن اگه همین محصول با همین طعم توی سبد هست
   const existing = cart.find(item => item.id === p.id && item.flavor === currentDetailFlavor);
-  if(existing){
-    existing.qty = (existing.qty || 1) + currentDetailQty;
-  } else {
-    cart.push({ id: p.id, name: p.name, price: finalPrice, shippingCost: p.shippingCost || 0, flavor: currentDetailFlavor || null, qty: currentDetailQty });
-  }
+  if(existing){ existing.qty = (existing.qty || 1) + currentDetailQty; }
+  else { cart.push({ id: p.id, name: p.name, price: finalPrice, shippingCost: p.shippingCost || 0, flavor: currentDetailFlavor || null, qty: currentDetailQty }); }
   document.getElementById('cart-count').textContent = cart.reduce((s,i)=>s+(i.qty||1), 0);
   toast(`✅ ${currentDetailQty} عدد به سبد اضافه شد`);
   closeProductDetail();
 }
-
 function addToCart(id){
   const p = allProducts.find(x=>x.id===id);
   if(!p || p.stock<=0) return;
@@ -1104,33 +1004,19 @@ function renderCart(){
   let html='', total=0;
   cart.forEach((item,i)=>{
     const flavorText = item.flavor ? ` (${item.flavor})` : '';
-    html += `<div class="cart-item-row">
-      <div class="cart-item-info">
-        <b>${item.name}${flavorText}</b>
-        <span style="color:#888;font-size:.8rem">${item.price.toLocaleString()} تومان</span>
-      </div>
-      <div class="cart-item-qty">
-        <button class="cart-qty-btn" onclick="changeCartQty(${i}, -1)">−</button>
-        <span class="cart-qty-num">${item.qty || 1}</span>
-        <button class="cart-qty-btn" onclick="changeCartQty(${i}, 1)">+</button>
-        <button class="cart-remove-btn" onclick="removeFromCart(${i})">✕</button>
-      </div>
-    </div>`;
+    html += `<div class="cart-item-row"><div class="cart-item-info"><b>${item.name}${flavorText}</b><span style="color:#888;font-size:.8rem">${item.price.toLocaleString()} تومان</span></div><div class="cart-item-qty"><button class="cart-qty-btn" onclick="changeCartQty(${i}, -1)">−</button><span class="cart-qty-num">${item.qty || 1}</span><button class="cart-qty-btn" onclick="changeCartQty(${i}, 1)">+</button><button class="cart-remove-btn" onclick="removeFromCart(${i})">✕</button></div></div>`;
     total += item.price * (item.qty || 1);
   });
   document.getElementById('cart-items-list').innerHTML = html || '<p style="text-align:center;color:#aaa">سبد خرید خالی است</p>';
   document.getElementById('total-price').textContent = total.toLocaleString();
 }
 function changeCartQty(index, delta){
-  const item = cart[index];
-  if(!item) return;
-  const currentQty = item.qty || 1;
-  const newQty = currentQty + delta;
+  const item = cart[index]; if(!item) return;
+  const newQty = (item.qty || 1) + delta;
   if(newQty < 1){ removeFromCart(index); return; }
   const product = allProducts.find(p => p.id === item.id);
   if(product && newQty > product.stock){ toast('بیشتر از موجودی نمی‌تونی انتخاب کنی'); return; }
-  item.qty = newQty;
-  renderCart();
+  item.qty = newQty; renderCart();
   document.getElementById('cart-count').textContent = cart.reduce((s,i)=>s+(i.qty||1), 0);
 }
 function removeFromCart(i){ cart.splice(i,1); document.getElementById('cart-count').textContent=cart.reduce((s,it)=>s+(it.qty||1),0); renderCart(); }
@@ -1142,19 +1028,8 @@ function showStep2(){
   document.getElementById('step-2').style.display='block';
   document.getElementById('cardInfoBox').innerHTML = `<div style="font-size:.85rem;margin-bottom:8px;">💳 پس از ثبت سفارش، مبلغ فاکتور را به کارت زیر واریز کنید:</div><div class="card-copy-row"><span class="card-num">${SHOP_SETTINGS.cardNumber}</span><button class="btn-copy" id="copyCardBtn" onclick="copyCardNumber()">کپی</button></div><div style="font-size:.8rem;color:#aaa;">به نام: ${SHOP_SETTINGS.cardName}</div>`;
 }
-function checkDiscount(){
-  const code = document.getElementById('c-discount').value.trim().toUpperCase();
-  const el = document.getElementById('discount-status');
-  if(!code){el.textContent='';return;}
-  if(discountCodes[code]!==undefined){el.innerHTML=`<span style="color:#4caf50">✓ کد معتبر — ${discountCodes[code]}٪ تخفیف</span>`;}
-  else{el.innerHTML='<span style="color:#ff4d2e">✗ کد نامعتبر</span>';}
-}
-function copyCardNumber(){
-  const num = SHOP_SETTINGS.cardNumber;
-  navigator.clipboard.writeText(num.replace(/-/g,'')).then(()=>{
-    const btn=document.getElementById('copyCardBtn');if(btn){btn.textContent='کپی شد ✓';btn.classList.add('ok');setTimeout(()=>{btn.textContent='کپی';btn.classList.remove('ok');},2000);}
-  }).catch(()=>{toast('شماره کارت کپی شد');});
-}
+function checkDiscount(){ const code = document.getElementById('c-discount').value.trim().toUpperCase(); const el = document.getElementById('discount-status'); if(!code){el.textContent='';return;} if(discountCodes[code]!==undefined){el.innerHTML=`<span style="color:#4caf50">✓ کد معتبر — ${discountCodes[code]}٪ تخفیف</span>`;} else{el.innerHTML='<span style="color:#ff4d2e">✗ کد نامعتبر</span>';} }
+function copyCardNumber(){ const num = SHOP_SETTINGS.cardNumber; navigator.clipboard.writeText(num.replace(/-/g,'')).then(()=>{ const btn=document.getElementById('copyCardBtn');if(btn){btn.textContent='کپی شد ✓';btn.classList.add('ok');setTimeout(()=>{btn.textContent='کپی';btn.classList.remove('ok');},2000);} }).catch(()=>{toast('شماره کارت کپی شد');}); }
 async function finalizeOrder(platform){
   const fname=document.getElementById('c-fname').value.trim();
   const lname=document.getElementById('c-lname').value.trim();
@@ -1183,18 +1058,12 @@ async function finalizeOrder(platform){
   if(platform === 'telegram'){ window.open('https://t.me/' + SHOP_SETTINGS.telegram + '?text=' + enc, '_blank'); }
   else if(platform === 'whatsapp'){ const waUsername = SHOP_SETTINGS.whatsapp || 'fitforgeshop'; window.open('https://wa.me/' + waUsername + '?text=' + enc, '_blank'); }
   try { await db.collection('shop_orders').add({orderCode, items: cart, baseTotal, shippingTotal, discountCode: code || null, discountAmount, finalTotal, name, phone, province, city, addr, zip, platform, status: 'pending', createdAt: now.toISOString()}); } catch(e){ console.error('Order save error:', e); }
-  closeCart();
-  cart = [];
-  document.getElementById('cart-count').textContent = 0;
+  closeCart(); cart = []; document.getElementById('cart-count').textContent = 0;
   toast('سفارش ثبت شد! کد: ' + orderCode);
 }
 function openAdminPin(){document.getElementById('admin-pin-modal').style.display='block';}
 function closeAdminPin(){document.getElementById('admin-pin-modal').style.display='none';document.getElementById('adminPinInput').value='';}
-function checkAdminPin(){
-  const v=document.getElementById('adminPinInput').value.trim();
-  if(v===ADMIN_PIN){closeAdminPin();showPage('admin');showAdminTab('dashboard');}
-  else{toast('رمز اشتباهه');}
-}
+function checkAdminPin(){ const v=document.getElementById('adminPinInput').value.trim(); if(v===ADMIN_PIN){closeAdminPin();showPage('admin');showAdminTab('dashboard');} else{toast('رمز اشتباهه');} }
 function showAdminTab(tab){
   document.querySelectorAll('.admin-panel-section').forEach(el => { el.classList.remove('active'); el.style.display = 'none'; });
   const target = document.getElementById('admin-'+tab);
@@ -1287,17 +1156,7 @@ async function saveProductForm(){
   const shippingCost = parseFloat(document.getElementById('pf-shipping').value) || 0;
   const profitPercent = parseFloat(document.getElementById('pf-profit').value) || 0;
   const finalPrice = calculateProductFinalPrice(liraPrice, shippingCost, profitPercent);
-  const data={
-    name:document.getElementById('pf-name').value.trim(),
-    priceLira: liraPrice, shippingCost: shippingCost, profitPercent: profitPercent, price: finalPrice,
-    img:document.getElementById('pf-img').value.trim(),
-    img2:document.getElementById('pf-img2').value.trim(),
-    flavors:document.getElementById('pf-flavors').value.trim(),
-    cat:document.getElementById('pf-cat').value,
-    discount:parseInt(document.getElementById('pf-discount').value)||0,
-    stock:parseInt(document.getElementById('pf-stock').value)||0,
-    desc:document.getElementById('pf-desc').value.trim()
-  };
+  const data={ name:document.getElementById('pf-name').value.trim(), priceLira: liraPrice, shippingCost: shippingCost, profitPercent: profitPercent, price: finalPrice, img:document.getElementById('pf-img').value.trim(), img2:document.getElementById('pf-img2').value.trim(), flavors:document.getElementById('pf-flavors').value.trim(), cat:document.getElementById('pf-cat').value, discount:parseInt(document.getElementById('pf-discount').value)||0, stock:parseInt(document.getElementById('pf-stock').value)||0, desc:document.getElementById('pf-desc').value.trim() };
   if(!data.name||!data.priceLira){toast('اسم و قیمت لیر رو پر کن');return;}
   try{
     if(editingProductId){await db.collection('shop_products').doc(editingProductId).update(data);}
@@ -1312,9 +1171,7 @@ async function saveProductForm(){
 async function deleteProduct(id){
   if(!confirm('این محصول حذف بشه؟')) return;
   try { await db.collection('shop_products').doc(id).delete(); } catch(e){}
-  await loadProducts();
-  renderAdminProducts();
-  applyFilters();
+  await loadProducts(); renderAdminProducts(); applyFilters();
   toast('حذف شد');
 }
 async function renderOrders(){
@@ -1333,13 +1190,8 @@ async function renderOrders(){
     }).join('');
   }catch(e){box.innerHTML='<p style="color:#888">خطا در بارگذاری سفارش‌ها</p>';}
 }
-async function setOrderStatus(id, status){
-  try { await db.collection('shop_orders').doc(id).update({status}); toast('وضعیت تغییر کرد'); renderOrders(); } catch(e){ toast('خطا'); }
-}
-async function cancelOrder(id){
-  if(!confirm('این سفارش کاملاً حذف بشه؟')) return;
-  try { await db.collection('shop_orders').doc(id).delete(); toast('سفارش حذف شد'); renderOrders(); } catch(e){ toast('خطا'); }
-}
+async function setOrderStatus(id, status){ try { await db.collection('shop_orders').doc(id).update({status}); toast('وضعیت تغییر کرد'); renderOrders(); } catch(e){ toast('خطا'); } }
+async function cancelOrder(id){ if(!confirm('این سفارش کاملاً حذف بشه؟')) return; try { await db.collection('shop_orders').doc(id).delete(); toast('سفارش حذف شد'); renderOrders(); } catch(e){ toast('خطا'); } }
 async function renderCustomers(){
   const container=document.getElementById('customers-list');
   container.innerHTML='⏳ در حال بارگذاری...';
@@ -1347,11 +1199,7 @@ async function renderCustomers(){
     const ordersSnap=await db.collection('shop_orders').get();
     const orders=ordersSnap.docs.map(d=>d.data());
     const customersMap={};
-    orders.forEach(o=>{
-      if(!customersMap[o.phone]){customersMap[o.phone]={name:o.name,phone:o.phone,orders:0,total:0};}
-      customersMap[o.phone].orders++;
-      customersMap[o.phone].total+=o.finalTotal||0;
-    });
+    orders.forEach(o=>{ if(!customersMap[o.phone]){customersMap[o.phone]={name:o.name,phone:o.phone,orders:0,total:0};} customersMap[o.phone].orders++; customersMap[o.phone].total+=o.finalTotal||0; });
     const customers=Object.values(customersMap).sort((a,b)=>b.total-a.total);
     if(customers.length===0){container.innerHTML='<p style="color:#888;text-align:center;padding:2rem;">هنوز مشتری ثبت نشده</p>';return;}
     container.innerHTML=`<table class="rt"><tr><th>#</th><th>نام</th><th>شماره</th><th>تعداد سفارش</th><th>کل خرید</th></tr>${customers.map((c,i)=>`<tr><td>${i+1}</td><td>${c.name}</td><td>${c.phone}</td><td>${c.orders}</td><td>${c.total.toLocaleString()} تومان</td></tr>`).join('')}</table>`;
@@ -1363,21 +1211,9 @@ function renderDiscounts(){
   if(keys.length===0){container.innerHTML='<p style="color:#888;text-align:center;padding:2rem;">کد تخفیفی ثبت نشده</p>';return;}
   container.innerHTML=`<div class="discount-grid">${keys.map(k=>`<div class="discount-card"><div class="discount-code">${k}</div><div class="discount-rate">${discountCodes[k]}% تخفیف</div><button class="btn-small btn-del" onclick="deleteCode('${k}')">حذف</button></div>`).join('')}</div>`;
 }
-function openDiscountForm(){
-  const code=prompt('کد تخفیف را وارد کنید (مثلاً: SUMMER20):');
-  if(!code)return;
-  const rate=prompt('درصد تخفیف را وارد کنید (عدد):');
-  if(!rate||isNaN(rate))return;
-  addDiscountCodeDirect(code.toUpperCase(), parseInt(rate));
-}
-async function addDiscountCodeDirect(name, rate){
-  try { await db.collection('shop_discountCodes').doc(name).set({rate}); await loadDiscountCodes(); renderDiscounts(); toast('کد اضافه شد'); } catch(e){ toast('خطا در ذخیره'); }
-}
-async function deleteCode(name){
-  try { await db.collection('shop_discountCodes').doc(name).delete(); } catch(e){}
-  await loadDiscountCodes();
-  renderDiscounts();
-}
+function openDiscountForm(){ const code=prompt('کد تخفیف را وارد کنید (مثلاً: SUMMER20):'); if(!code)return; const rate=prompt('درصد تخفیف را وارد کنید (عدد):'); if(!rate||isNaN(rate))return; addDiscountCodeDirect(code.toUpperCase(), parseInt(rate)); }
+async function addDiscountCodeDirect(name, rate){ try { await db.collection('shop_discountCodes').doc(name).set({rate}); await loadDiscountCodes(); renderDiscounts(); toast('کد اضافه شد'); } catch(e){ toast('خطا در ذخیره'); } }
+async function deleteCode(name){ try { await db.collection('shop_discountCodes').doc(name).delete(); } catch(e){} await loadDiscountCodes(); renderDiscounts(); }
 function loadSettings(){
   document.getElementById('setPin').value=ADMIN_PIN;
   document.getElementById('setCard').value=SHOP_SETTINGS.cardNumber||'';
@@ -1414,61 +1250,30 @@ async function runImport(){
     for(let i=0;i<oldDocs.length;i+=400){const batch=db.batch();oldDocs.slice(i,i+400).forEach(d=>batch.delete(d.ref));await batch.commit();}
     for(let i=0;i<SEED_PRODUCTS.length;i+=400){const batch=db.batch();SEED_PRODUCTS.slice(i,i+400).forEach(p=>{const ref=db.collection('shop_products').doc();batch.set(ref,p);});await batch.commit();}
     toast('بروزرسانی تمام شد!');
-    await loadProducts();
-    applyFilters();
-    checkImportStatus();
+    await loadProducts(); applyFilters(); checkImportStatus();
   } catch(e){ toast('خطا در بروزرسانی'); }
 }
 async function loadProducts(){
   const cached = localStorage.getItem('ff_products_cache');
-  if(cached){
-    try{ allProducts = JSON.parse(cached); renderMainCats(); applyFilters(); renderDiscountTrack(); }catch(e){}
-  }
+  if(cached){ try{ allProducts = JSON.parse(cached); renderMainCats(); applyFilters(); renderDiscountTrack(); }catch(e){} }
   try{
     const snap = await db.collection('shop_products').get();
     allProducts = snap.docs.map(d=>({id:d.id,...d.data()}));
     localStorage.setItem('ff_products_cache', JSON.stringify(allProducts));
-    renderMainCats();
-    applyFilters();
-    renderDiscountTrack();
+    renderMainCats(); applyFilters(); renderDiscountTrack();
   }catch(e){ console.error('Firebase Error:', e); if(!cached) toast('⚠️ خطا در ارتباط با سرور'); }
 }
 async function loadDiscountCodes(){
-  try{
-    const snap=await db.collection('shop_discountCodes').get();
-    discountCodes={};
-    snap.docs.forEach(d=>discountCodes[d.id]=d.data().rate);
-  }catch(e){discountCodes={};}
+  try{ const snap=await db.collection('shop_discountCodes').get(); discountCodes={}; snap.docs.forEach(d=>discountCodes[d.id]=d.data().rate); }catch(e){discountCodes={};}
 }
-function updateAdminDate(){
-  const el=document.getElementById('adminDate');
-  if(!el)return;
-  const now=new Date();
-  el.textContent=now.toLocaleDateString('fa-IR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-}
+function updateAdminDate(){ const el=document.getElementById('adminDate'); if(!el)return; const now=new Date(); el.textContent=now.toLocaleDateString('fa-IR',{weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
 
-// ===== مدیریت دکمه Back گوشی =====
 window.addEventListener('popstate', function(e) {
-  // اگه صفحه جزئیات باز بود، ببندش
   const detailPage = document.getElementById('product-detail-page');
-  if(detailPage && detailPage.classList.contains('open')){
-    closeProductDetail();
-    return;
-  }
-  // اگه سبد خرید باز بود، ببندش
-  if(document.getElementById('cart-modal').style.display === 'block'){
-    closeCart();
-    return;
-  }
-  // اگه پنل ادمین باز بود، برگرد به home
+  if(detailPage && detailPage.classList.contains('open')){ closeProductDetail(); return; }
+  if(document.getElementById('cart-modal').style.display === 'block'){ closeCart(); return; }
   const activePage = document.querySelector('.page.active');
-  if(activePage && activePage.id === 'page-admin'){
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.getElementById('page-home').classList.add('active');
-    return;
-  }
-  // اگه فروشگاه باز بود، برگرد به home
-  if(activePage && activePage.id === 'page-shop'){
+  if(activePage && (activePage.id === 'page-admin' || activePage.id === 'page-shop')){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById('page-home').classList.add('active');
     return;
@@ -1479,11 +1284,8 @@ history.pushState({page: 'home'}, '', location.href);
 async function init(){
   try{
     const s=await db.collection('shop_settings').doc('app').get();
-    if(s.exists){
-      const d=s.data();
-      ADMIN_PIN=d.pin||ADMIN_PIN;
-      SHOP_SETTINGS={...SHOP_SETTINGS,...d};
-    }else{await db.collection('shop_settings').doc('app').set({pin:ADMIN_PIN,...SHOP_SETTINGS});}
+    if(s.exists){ const d=s.data(); ADMIN_PIN=d.pin||ADMIN_PIN; SHOP_SETTINGS={...SHOP_SETTINGS,...d}; }
+    else{await db.collection('shop_settings').doc('app').set({pin:ADMIN_PIN,...SHOP_SETTINGS});}
     const pricingDoc=await db.collection('shop_settings').doc('pricing').get();
     if(pricingDoc.exists){ globalLiraRate=pricingDoc.data().liraRate||5000; }
     document.getElementById('liraToToman').value=globalLiraRate;
