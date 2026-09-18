@@ -622,6 +622,15 @@ html.light .cart-item-row{background:#f5f5f5;}
 // ===== API Configuration =====
 const API_URL = 'https://fitforge-api.manihashempour17.workers.dev/api';
 const IMGBB_API_KEY = '897003a654c24c0384d85bdb548d47d0';
+const IMAGE_PROXY = 'https://fitforge-images.manihashempour17.workers.dev/?url=';
+
+// ===== پروکسی عکس =====
+function proxyImage(url) {
+  if (!url) return 'https://placehold.co/150x150/16213e/aaa?text=No+Image';
+  if (url.includes('fitforge-images.manihashempour17.workers.dev')) return url;
+  if (url.includes('imgbb.com') || url.includes('placehold.co') || url.includes('ibb.co')) return url;
+  return IMAGE_PROXY + encodeURIComponent(url);
+}
 
 async function apiCall(endpoint, method = 'GET', data = null) {
   const options = { method, headers: { 'Content-Type': 'application/json' } };
@@ -678,7 +687,7 @@ function renderBanners(){
   const title = document.getElementById('bannerTitle');
   const text = document.getElementById('bannerText');
   const btn = document.getElementById('bannerBtn');
-  if(bgImg) bgImg.src = bannerSettings.bg;
+  if(bgImg) bgImg.src = proxyImage(bannerSettings.bg);
   if(title) title.textContent = bannerSettings.title;
   if(text) text.textContent = bannerSettings.text;
   if(btn) btn.textContent = bannerSettings.btn;
@@ -707,8 +716,8 @@ function showCurrentFloatingPair(){
   if(rightWrap) rightWrap.classList.add('fade-out');
   if(leftWrap) leftWrap.classList.add('fade-out');
   setTimeout(() => {
-    if(floatRight) floatRight.src = pair.right;
-    if(floatLeft) floatLeft.src = pair.left;
+    if(floatRight) floatRight.src = proxyImage(pair.right);
+    if(floatLeft) floatLeft.src = proxyImage(pair.left);
     if(rightWrap) rightWrap.classList.remove('fade-out');
     if(leftWrap) leftWrap.classList.remove('fade-out');
   }, 500);
@@ -771,8 +780,8 @@ function loadBannerForm(){
   document.getElementById('ban-speed').value = bannerSettings.rotationSpeed || 4;
   document.getElementById('ban-insta').value = SHOP_SETTINGS.instagram || '';
   document.getElementById('ban-insta-logo').value = SHOP_SETTINGS.instagramLogo || '';
-  document.getElementById('preview-bg').innerHTML = bannerSettings.bg ? `<img src="${bannerSettings.bg}">` : '';
-  document.getElementById('preview-insta-logo').innerHTML = SHOP_SETTINGS.instagramLogo ? `<img src="${SHOP_SETTINGS.instagramLogo}">` : '';
+  document.getElementById('preview-bg').innerHTML = bannerSettings.bg ? `<img src="${proxyImage(bannerSettings.bg)}">` : '';
+  document.getElementById('preview-insta-logo').innerHTML = SHOP_SETTINGS.instagramLogo ? `<img src="${proxyImage(SHOP_SETTINGS.instagramLogo)}">` : '';
   renderFloatingPairsList();
 }
 function renderFloatingPairsList(){
@@ -834,7 +843,7 @@ function renderDiscountTrack(){
   if(discounted.length===0){track.parentElement.parentElement.style.display='none';return;}
   track.innerHTML = [...discounted,...discounted].map(p=>{
     const final = Math.round(p.price*(1-p.discount/100));
-    return `<div class="d-mini" onclick="openProductDetail('${p.id}')"><img src="${p.img}" onerror="this.src='https://placehold.co/90x90/16213e/aaa?text=FF'"><div class="d-badge">%${p.discount}</div><h4>${p.name.slice(0,30)}</h4><div class="op">${p.price.toLocaleString()}</div><div class="np">${final.toLocaleString()} تومان</div></div>`;
+    return `<div class="d-mini" onclick="openProductDetail('${p.id}')"><img src="${proxyImage(p.img)}" onerror="this.src='https://placehold.co/90x90/16213e/aaa?text=FF'"><div class="d-badge">%${p.discount}</div><h4>${p.name.slice(0,30)}</h4><div class="op">${p.price.toLocaleString()}</div><div class="np">${final.toLocaleString()} تومان</div></div>`;
   }).join('');
 }
 function renderMainCats(){ const box = document.getElementById('mainCats'); box.innerHTML = '<button class="btn-cat active-cat" onclick="filterMain(null,this)">همه</button>' + Object.keys(CATS).map(k=>`<button class="btn-cat" onclick="filterMain('${k}',this)">${CATS[k].label}</button>`).join(''); }
@@ -904,7 +913,7 @@ function renderProducts(list){
     const hasDiscount = p.discount && p.discount>0;
     const finalPrice = hasDiscount ? Math.round(p.price*(1-p.discount/100)) : p.price;
     let stockBadge = p.stock<=0 ? '<span class="stock-badge stock-out">ناموجود</span>' : (p.stock<=3 ? `<span class="stock-badge stock-low">فقط ${p.stock} عدد</span>` : '<span class="stock-badge stock-ok">موجود</span>');
-    return `<div class="product-card" onclick="openProductDetail('${p.id}')"><img src="${p.img}" onerror="this.src='https://placehold.co/150x150/16213e/aaa?text=FitForge'"><h3>${p.name}</h3>${stockBadge}${hasDiscount?`<div style="text-decoration:line-through;color:#888;font-size:.8rem">${p.price.toLocaleString()}</div>`:''}<div class="price">${finalPrice.toLocaleString()} تومان</div><button class="btn-add" ${p.stock<=0?'disabled':''} onclick="event.stopPropagation();addToCart('${p.id}')">${p.stock<=0?'ناموجود':'🛒 افزودن'}</button></div>`;
+    return `<div class="product-card" onclick="openProductDetail('${p.id}')"><img src="${proxyImage(p.img)}" onerror="this.src='https://placehold.co/150x150/16213e/aaa?text=FitForge'"><h3>${p.name}</h3>${stockBadge}${hasDiscount?`<div style="text-decoration:line-through;color:#888;font-size:.8rem">${p.price.toLocaleString()}</div>`:''}<div class="price">${finalPrice.toLocaleString()} تومان</div><button class="btn-add" ${p.stock<=0?'disabled':''} onclick="event.stopPropagation();addToCart('${p.id}')">${p.stock<=0?'ناموجود':'🛒 افزودن'}</button></div>`;
   }).join('');
 }
 function renderPagination(totalPages){
@@ -935,10 +944,10 @@ function openProductDetail(id){
   if(p.stock <= 0){ stockEl.className = 'product-detail-stock stock-out'; stockEl.textContent = '❌ ناموجود'; }
   else if(p.stock <= 3){ stockEl.className = 'product-detail-stock stock-low'; stockEl.textContent = `⚠️ فقط ${p.stock} عدد در انبار`; }
   else { stockEl.className = 'product-detail-stock stock-ok'; stockEl.textContent = '✅ موجود در انبار'; }
-  document.getElementById('pd-main-img').src = p.img || 'https://placehold.co/400x400/16213e/aaa?text=No+Image';
+  document.getElementById('pd-main-img').src = proxyImage(p.img) || 'https://placehold.co/400x400/16213e/aaa?text=No+Image';
   const thumbsEl = document.getElementById('pd-thumbs');
   const images = [p.img]; if(p.img2) images.push(p.img2);
-  thumbsEl.innerHTML = images.length > 1 ? images.map((img, i) => `<img src="${img}" class="${i===0?'active':''}" onclick="changeDetailImage(this, '${img.replace(/'/g,"\\'")}')">`).join('') : '';
+  thumbsEl.innerHTML = images.length > 1 ? images.map((img, i) => `<img src="${proxyImage(img)}" class="${i===0?'active':''}" onclick="changeDetailImage(this, '${proxyImage(img).replace(/'/g,"\\'")}')">`).join('') : '';
   const flavorsSection = document.getElementById('pd-flavors-section');
   const flavorsEl = document.getElementById('pd-flavors');
   if(p.flavors && p.flavors.trim()){
@@ -1100,7 +1109,7 @@ function renderAdminProducts(){
   const list=allProducts.filter(p=>p.name.toLowerCase().includes(term));
   const box=document.getElementById('admin-products-list');
   if(list.length===0){box.innerHTML='<p style="color:#888;text-align:center;padding:2rem;">محصولی یافت نشد</p>';return;}
-  box.innerHTML=list.slice(0,150).map(p=>`<div class="admin-product-row"><img src="${p.img}" onerror="this.src='https://placehold.co/60x60/16213e/aaa?text=FF'"><div class="info"><b>${p.name}</b><br><span style="color:#888;font-size:.8rem">🔸 لیر: ${p.priceLira?.toLocaleString() || '۰'} TRY<br>🔹 تومان: ${p.price.toLocaleString()}<br>🚚 ارسال: ${(p.shippingCost||0).toLocaleString()}<br>📈 سود: ${p.profitPercent||0}%<br>📦 موجودی: ${p.stock}</span></div><div class="actions"><button class="btn-small btn-edit" onclick="openProductForm('${p.id}')">ویرایش</button><button class="btn-small btn-del" onclick="deleteProduct('${p.id}')">حذف</button></div></div>`).join('');
+  box.innerHTML=list.slice(0,150).map(p=>`<div class="admin-product-row"><img src="${proxyImage(p.img)}" onerror="this.src='https://placehold.co/60x60/16213e/aaa?text=FF'"><div class="info"><b>${p.name}</b><br><span style="color:#888;font-size:.8rem">🔸 لیر: ${p.priceLira?.toLocaleString() || '۰'} TRY<br>🔹 تومان: ${p.price.toLocaleString()}<br>🚚 ارسال: ${(p.shippingCost||0).toLocaleString()}<br>📈 سود: ${p.profitPercent||0}%<br>📦 موجودی: ${p.stock}</span></div><div class="actions"><button class="btn-small btn-edit" onclick="openProductForm('${p.id}')">ویرایش</button><button class="btn-small btn-del" onclick="deleteProduct('${p.id}')">حذف</button></div></div>`).join('');
 }
 function openProductForm(id){
   editingProductId=id;
@@ -1241,7 +1250,7 @@ async function checkImportStatus(){
 }
 async function runImport(){ toast('این بخش هنوز آماده نیست'); }
 async function loadProducts(){
-  const cached = localStorage.getItem('ff_products_cache_v2');
+  const cached = localStorage.getItem('ff_products_cache_v3');
   if(cached){ try{ allProducts = JSON.parse(cached); renderMainCats(); applyFilters(); renderDiscountTrack(); }catch(e){} }
   try{
     const products = await apiCall('/products');
@@ -1250,7 +1259,7 @@ async function loadProducts(){
       profitPercent: p.profitPercent, price: p.price, img: p.img, img2: p.img2,
       flavors: p.flavors, cat: p.cat, discount: p.discount, stock: p.stock, desc: p.desc
     }));
-    localStorage.setItem('ff_products_cache_v2', JSON.stringify(allProducts));
+    localStorage.setItem('ff_products_cache_v3', JSON.stringify(allProducts));
     renderMainCats(); applyFilters(); renderDiscountTrack();
   }catch(e){ console.error('API Error:', e); if(!cached) toast('⚠️ خطا در ارتباط با سرور'); }
 }
