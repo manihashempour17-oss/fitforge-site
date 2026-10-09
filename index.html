@@ -39,7 +39,7 @@ header{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:
 .btn-add{background:var(--primary);color:white;border:none;padding:.6rem;width:100%;border-radius:6px;cursor:pointer;font-weight:bold;margin-top:6px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 .btn-add:disabled{background:#444;cursor:not-allowed;}
 .cart-float{position:fixed;bottom:20px;right:20px;background:var(--primary);padding:1rem 1.5rem;border-radius:50px;cursor:pointer;z-index:999;font-weight:bold;box-shadow:0 4px 15px rgba(255,77,46,.4);}
-#cart-modal,#admin-pin-modal,#lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:1000;padding:2rem;overflow-y:auto;}
+#cart-modal,#admin-pin-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:1000;padding:2rem;overflow-y:auto;}
 .cart-content,.modal-box{max-width:550px;margin:auto;background:var(--card);padding:2rem;border-radius:15px;border:1px solid #444;}
 .form-group{margin-bottom:1rem;text-align:right;}
 .form-group label{display:block;margin-bottom:.4rem;font-size:.9rem;color:#ccc;}
@@ -67,7 +67,7 @@ header{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:
 .pin-input{width:180px;margin:1rem auto;display:block;text-align:center;font-size:24px;letter-spacing:10px;padding:12px;}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--primary);padding:.8rem 1.5rem;border-radius:10px;opacity:0;transition:.3s;z-index:2000;}
 .toast.show{opacity:1;bottom:100px;}
-#lightbox{cursor:zoom-out;justify-content:center;align-items:center;}
+#lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:2000;cursor:zoom-out;justify-content:center;align-items:center;}
 #lightbox.open{display:flex;}
 #lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border-radius:10px;}
 .import-warn{background:#3a2a10;border:1px solid var(--primary);padding:1rem;border-radius:10px;margin-bottom:1rem;font-size:.85rem;}
@@ -313,6 +313,8 @@ html.light .cart-item-row{background:#f5f5f5;}
 .pagination{display:flex;gap:8px;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;}
 .page-btn{background:#222;color:white;border:1px solid #444;padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-weight:bold;min-width:40px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 .page-btn.active{background:var(--primary);border-color:var(--primary);}
+.share-btn{background:#2a2a44;color:#fff;border:1px solid #444;padding:.6rem 1rem;border-radius:8px;cursor:pointer;font-weight:bold;margin-top:1rem;display:inline-flex;align-items:center;gap:6px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.share-btn:hover{background:var(--primary);border-color:var(--primary);}
 </style>
 <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -392,7 +394,7 @@ html.light .cart-item-row{background:#f5f5f5;}
 </div>
 
 <div class="page" id="page-shop">
-  <div class="hero"><h2>فروشگاه fitforge.ir</h2></div>
+  <div class="hero"><h2 id="shopPageTitle">فروشگاه fitforge.ir</h2></div>
   <div class="search-box" style="display:flex;gap:8px;align-items:center;">
     <input type="text" id="shop-search" placeholder="جستجوی محصول..." oninput="applyFilters()" style="flex:1">
     <select id="sort-select" onchange="applyFilters()" style="background:#16213e;color:#fff;border:1px solid #444;border-radius:8px;padding:.6rem .8rem;font-family:inherit;font-size:.85rem;cursor:pointer;min-width:130px;">
@@ -416,7 +418,7 @@ html.light .cart-item-row{background:#f5f5f5;}
     <div class="product-detail-grid">
       <div class="product-detail-images">
         <div class="product-detail-main-img">
-          <img id="pd-main-img" src="" alt="" onclick="openLightbox(this.src)">
+          <img id="pd-main-img" src="" alt="" onclick="openLightbox(event, this.src)">
         </div>
         <div class="product-detail-thumbs" id="pd-thumbs"></div>
       </div>
@@ -436,6 +438,9 @@ html.light .cart-item-row{background:#f5f5f5;}
         <div id="pd-desc" class="product-detail-desc"></div>
         <button class="btn-full green" style="font-size:1.1rem;padding:1rem;" onclick="addDetailToCart()">
           🛒 افزودن به سبد خرید
+        </button>
+        <button class="share-btn" onclick="shareProduct()">
+          🔗 اشتراک‌گذاری محصول
         </button>
       </div>
     </div>
@@ -633,6 +638,17 @@ function proxyImage(url) {
   return IMAGE_PROXY + encodeURIComponent(url);
 }
 
+// ===== ساخت URL-friendly از اسم محصول =====
+function slugify(text) {
+  return text
+    .toString()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\u0600-\u06FF\u200c\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 async function apiCall(endpoint, method = 'GET', data = null) {
   const options = { method, headers: { 'Content-Type': 'application/json' } };
   if (data) options.body = JSON.stringify(data);
@@ -674,77 +690,136 @@ let bannerSettings = {
 let floatingPairIndex = 0;
 let floatingTimer = null;
 
-// ===== مدیریت تاریخچه مرورگر =====
-let currentPageId = 'home';
-let navigationStack = ['home'];
+// ===== مدیریت URL و History =====
+let isPopState = false;
 
-function updateHistory(pageId, action = 'push') {
-  if (action === 'push') {
-    if (navigationStack[navigationStack.length - 1] !== pageId) {
-      navigationStack.push(pageId);
-      history.pushState({ page: pageId }, '', '#' + pageId);
-    }
+function buildHash(page, params = {}) {
+  let hash = '#' + page;
+  if (params.mainCat) hash += '/' + params.mainCat;
+  if (params.subCat) hash += '/' + params.subCat;
+  if (params.slug) hash += '/' + params.slug;
+  return hash;
+}
+
+function parseHash() {
+  const hash = location.hash.slice(1);
+  if (!hash) return { page: 'home' };
+  const parts = hash.split('/');
+  return {
+    page: parts[0] || 'home',
+    mainCat: parts[1] || null,
+    subCat: parts[2] || null,
+    slug: parts[3] || null,
+    productId: parts[1] || null
+  };
+}
+
+function navigateTo(page, params = {}, replace = false) {
+  const hash = buildHash(page, params);
+  if (replace) {
+    history.replaceState({ page, params }, '', hash);
+  } else {
+    history.pushState({ page, params }, '', hash);
   }
 }
 
 window.addEventListener('popstate', function(e) {
-  // اگه صفحه جزئیات محصول باز بود
+  isPopState = true;
+  
+  // اگه صفحه جزئیات محصول باز بود، ببندش
   const detailPage = document.getElementById('product-detail-page');
   if (detailPage && detailPage.classList.contains('open')) {
-    closeProductDetail(false);
+    closeProductDetail(true);
     return;
   }
   
   // اگه سبد خرید باز بود
   if (document.getElementById('cart-modal').style.display === 'block') {
-    closeCart(false);
+    closeCart(true);
     return;
   }
   
-  // اگه پنل ادمین باز بود
+  // اگه پنل ادمین باز بود (پین)
   if (document.getElementById('admin-pin-modal').style.display === 'block') {
-    closeAdminPin(false);
+    closeAdminPin(true);
     return;
   }
   
+  // اگه فرم محصول باز بود
   if (document.getElementById('product-form-modal').style.display === 'block') {
-    closeProductForm(false);
+    closeProductForm(true);
     return;
   }
   
-  // مدیریت صفحات اصلی
-  const activePage = document.querySelector('.page.active');
-  if (!activePage) return;
+  // مدیریت صفحات اصلی بر اساس URL
+  const route = parseHash();
+  handleRoute(route);
   
-  const activePageId = activePage.id.replace('page-', '');
-  
-  if (activePageId === 'shop') {
-    showPageWithoutHistory('home');
-    navigationStack = ['home'];
-  } else if (activePageId === 'admin') {
-    showPageWithoutHistory('home');
-    navigationStack = ['home'];
-  } else if (activePageId === 'home') {
-    // توی صفحه اصلی هستیم، کاری نکن (خروج از سایت)
-  }
+  isPopState = false;
 });
+
+function handleRoute(route) {
+  if (route.page === 'product-detail' && route.productId) {
+    // اگه محصول توی URL بود، بازش کن
+    if (allProducts.length > 0) {
+      openProductDetail(route.productId, true);
+    } else {
+      setTimeout(() => {
+        if (allProducts.length > 0) openProductDetail(route.productId, true);
+      }, 1000);
+    }
+  } else if (route.page === 'shop') {
+    // اگه دسته‌بندی توی URL بود
+    if (route.mainCat) {
+      showPageWithoutHistory('shop');
+      currentMain = route.mainCat;
+      currentSub = route.subCat;
+      setTimeout(() => {
+        // آپدیت UI دکمه‌ها
+        document.querySelectorAll('.shop-main-cats .btn-cat').forEach(b => {
+          const label = CATS[route.mainCat]?.label;
+          if (b.textContent.trim() === label) b.classList.add('active-cat');
+          else b.classList.remove('active-cat');
+        });
+        const subBox = document.getElementById('subCats');
+        if (route.mainCat && CATS[route.mainCat]) {
+          subBox.style.display = 'flex';
+          subBox.innerHTML = '<button class="btn-sub-cat' + (!route.subCat ? ' active-sub' : '') + '" onclick="filterSub(null,this)">همه</button>' +
+            Object.keys(CATS[route.mainCat].subs).map(k => 
+              `<button class="btn-sub-cat${k === route.subCat ? ' active-sub' : ''}" onclick="filterSub('${k}',this)">${CATS[route.mainCat].subs[k]}</button>`
+            ).join('');
+        }
+        applyFilters();
+      }, 50);
+    } else {
+      showPageWithoutHistory('shop');
+      currentMain = null; currentSub = null;
+    }
+  } else if (route.page === 'admin') {
+    showPageWithoutHistory('admin');
+  } else {
+    showPageWithoutHistory('home');
+  }
+}
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
 function showPageWithoutHistory(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById('page-' + id);
   if (target) target.classList.add('active');
   window.scrollTo(0, 0);
-  currentPageId = id;
 }
 
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
-
-function showPage(id){
+function showPage(id, pushHistory = true) {
   showPageWithoutHistory(id);
-  if (id === 'shop' || id === 'admin') {
-    if (navigationStack[navigationStack.length - 1] !== id) {
-      navigationStack.push(id);
-      history.pushState({ page: id }, '', '#' + id);
+  if (pushHistory && !isPopState) {
+    if (id === 'shop') {
+      navigateTo('shop');
+    } else if (id === 'admin') {
+      navigateTo('admin');
+    } else if (id === 'home') {
+      navigateTo('home');
     }
   }
 }
@@ -917,7 +992,8 @@ function renderDiscountTrack(){
   if(discounted.length===0){track.parentElement.parentElement.style.display='none';return;}
   track.innerHTML = [...discounted,...discounted].map(p=>{
     const final = Math.round(p.price*(1-p.discount/100));
-    return `<div class="d-mini" onclick="openProductDetail('${p.id}')"><img src="${proxyImage(p.img)}" onerror="this.src='https://placehold.co/90x90/16213e/aaa?text=FF'"><div class="d-badge">%${p.discount}</div><h4>${p.name.slice(0,30)}</h4><div class="op">${p.price.toLocaleString()}</div><div class="np">${final.toLocaleString()} تومان</div></div>`;
+    const slug = slugify(p.name);
+    return `<div class="d-mini" onclick="openProductDetail('${p.id}', false, '${slug}')"><img src="${proxyImage(p.img)}" onerror="this.src='https://placehold.co/90x90/16213e/aaa?text=FF'"><div class="d-badge">%${p.discount}</div><h4>${p.name.slice(0,30)}</h4><div class="op">${p.price.toLocaleString()}</div><div class="np">${final.toLocaleString()} تومان</div></div>`;
   }).join('');
 }
 function renderMainCats(){ const box = document.getElementById('mainCats'); box.innerHTML = '<button class="btn-cat active-cat" onclick="filterMain(null,this)">همه</button>' + Object.keys(CATS).map(k=>`<button class="btn-cat" onclick="filterMain('${k}',this)">${CATS[k].label}</button>`).join(''); }
@@ -929,9 +1005,32 @@ function filterMain(main, btn){
   if(!main){ subBox.style.display='none';}
   else{ subBox.style.display='flex'; subBox.innerHTML = '<button class="btn-sub-cat active-sub" onclick="filterSub(null,this)">همه</button>' + Object.keys(CATS[main].subs).map(k=>`<button class="btn-sub-cat" onclick="filterSub('${k}',this)">${CATS[main].subs[k]}</button>`).join(''); }
   currentPage = 1; applyFilters();
+  // آپدیت URL
+  if (main) {
+    navigateTo('shop', { mainCat: main });
+  } else {
+    navigateTo('shop');
+  }
 }
-function filterSub(sub, btn){ document.querySelectorAll('.btn-sub-cat').forEach(b=>b.classList.remove('active-sub')); btn.classList.add('active-sub'); currentSub = sub; currentPage = 1; applyFilters(); }
-function goShopWithCat(main){ showPage('shop'); setTimeout(()=>{ const btn = [...document.querySelectorAll('.shop-main-cats .btn-cat')].find(b=>b.textContent.trim()===CATS[main].label); if(btn) filterMain(main, btn); }, 50); }
+function filterSub(sub, btn){
+  document.querySelectorAll('.btn-sub-cat').forEach(b=>b.classList.remove('active-sub'));
+  btn.classList.add('active-sub');
+  currentSub = sub;
+  currentPage = 1; applyFilters();
+  // آپدیت URL
+  if (sub) {
+    navigateTo('shop', { mainCat: currentMain, subCat: sub });
+  } else if (currentMain) {
+    navigateTo('shop', { mainCat: currentMain });
+  }
+}
+function goShopWithCat(main){
+  showPage('shop');
+  setTimeout(()=>{ 
+    const btn = [...document.querySelectorAll('.shop-main-cats .btn-cat')].find(b=>b.textContent.trim()===CATS[main].label); 
+    if(btn) filterMain(main, btn); 
+  }, 50);
+}
 function calculateProductFinalPrice(liraPrice, shippingCost, profitPercent) {
   if (!liraPrice || liraPrice <= 0) return 0;
   const baseToman = liraPrice * globalLiraRate;
@@ -987,7 +1086,8 @@ function renderProducts(list){
     const hasDiscount = p.discount && p.discount>0;
     const finalPrice = hasDiscount ? Math.round(p.price*(1-p.discount/100)) : p.price;
     let stockBadge = p.stock<=0 ? '<span class="stock-badge stock-out">ناموجود</span>' : (p.stock<=3 ? `<span class="stock-badge stock-low">فقط ${p.stock} عدد</span>` : '<span class="stock-badge stock-ok">موجود</span>');
-    return `<div class="product-card" onclick="openProductDetail('${p.id}')"><img src="${proxyImage(p.img)}" onerror="this.src='https://placehold.co/150x150/16213e/aaa?text=FitForge'"><h3>${p.name}</h3>${stockBadge}${hasDiscount?`<div style="text-decoration:line-through;color:#888;font-size:.8rem">${p.price.toLocaleString()}</div>`:''}<div class="price">${finalPrice.toLocaleString()} تومان</div><button class="btn-add" ${p.stock<=0?'disabled':''} onclick="event.stopPropagation();event.preventDefault();addToCart('${p.id}')">${p.stock<=0?'ناموجود':'🛒 افزودن'}</button></div>`;
+    const slug = slugify(p.name);
+    return `<div class="product-card" onclick="openProductDetail('${p.id}', false, '${slug}')"><img src="${proxyImage(p.img)}" onerror="this.src='https://placehold.co/150x150/16213e/aaa?text=FitForge'"><h3>${p.name}</h3>${stockBadge}${hasDiscount?`<div style="text-decoration:line-through;color:#888;font-size:.8rem">${p.price.toLocaleString()}</div>`:''}<div class="price">${finalPrice.toLocaleString()} تومان</div><button class="btn-add" ${p.stock<=0?'disabled':''} onclick="event.stopPropagation();event.preventDefault();addToCart('${p.id}')">${p.stock<=0?'ناموجود':'🛒 افزودن'}</button></div>`;
   }).join('');
 }
 function renderPagination(totalPages){
@@ -1002,9 +1102,18 @@ function renderPagination(totalPages){
   container.innerHTML = html;
 }
 function goToPage(page){ currentPage = page; applyFilters(); }
-function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').classList.add('open');}
-function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
-function openProductDetail(id){
+
+function openLightbox(event, src){
+  if(event) { event.stopPropagation(); }
+  document.getElementById('lightbox-img').src=src;
+  document.getElementById('lightbox').classList.add('open');
+  history.pushState({ page: 'lightbox' }, '', '#lightbox');
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+function openProductDetail(id, fromHistory = false, slug = null){
   const p = allProducts.find(x=>x.id==id);
   if(!p) return;
   currentDetailProduct = p;
@@ -1021,7 +1130,7 @@ function openProductDetail(id){
   document.getElementById('pd-main-img').src = proxyImage(p.img) || 'https://placehold.co/400x400/16213e/aaa?text=No+Image';
   const thumbsEl = document.getElementById('pd-thumbs');
   const images = [p.img]; if(p.img2) images.push(p.img2);
-  thumbsEl.innerHTML = images.length > 1 ? images.map((img, i) => `<img src="${proxyImage(img)}" class="${i===0?'active':''}" onclick="changeDetailImage(event, '${proxyImage(img).replace(/'/g,"\\'")}')" ontouchstart="">`).join('') : '';
+  thumbsEl.innerHTML = images.length > 1 ? images.map((img, i) => `<img src="${proxyImage(img)}" class="${i===0?'active':''}" onclick="changeDetailImage(event, '${proxyImage(img).replace(/'/g,"\\'")}')">`).join('') : '';
   const flavorsSection = document.getElementById('pd-flavors-section');
   const flavorsEl = document.getElementById('pd-flavors');
   if(p.flavors && p.flavors.trim()){
@@ -1034,18 +1143,18 @@ function openProductDetail(id){
   document.getElementById('pd-qty').textContent = '1';
   document.getElementById('product-detail-page').classList.add('open');
   document.body.style.overflow = 'hidden';
-  navigationStack.push('product-detail');
-  history.pushState({ page: 'product-detail' }, '', '#product-detail');
+  // آپدیت URL
+  if (!fromHistory) {
+    const productSlug = slug || slugify(p.name);
+    navigateTo('product-detail', { productId: p.id, slug: productSlug });
+  }
 }
-function closeProductDetail(addToHistory = true){
+function closeProductDetail(fromHistory = false){
   document.getElementById('product-detail-page').classList.remove('open');
   document.body.style.overflow = '';
   currentDetailProduct = null;
   currentDetailQty = 1;
   currentDetailFlavor = null;
-  if (addToHistory && navigationStack[navigationStack.length - 1] === 'product-detail') {
-    navigationStack.pop();
-  }
 }
 function changeDetailQty(delta){ if(!currentDetailProduct) return; const newQty = currentDetailQty + delta; if(newQty < 1) return; if(newQty > currentDetailProduct.stock){ toast('بیشتر از موجودی نمی‌تونی انتخاب کنی'); return; } currentDetailQty = newQty; document.getElementById('pd-qty').textContent = newQty; }
 function selectDetailFlavor(btn, flavor){ document.querySelectorAll('#pd-flavors .flavor-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); currentDetailFlavor = flavor; }
@@ -1067,8 +1176,18 @@ function addDetailToCart(){
   else { cart.push({ id: p.id, name: p.name, price: finalPrice, shippingCost: p.shippingCost || 0, flavor: currentDetailFlavor || null, qty: currentDetailQty }); }
   document.getElementById('cart-count').textContent = cart.reduce((s,i)=>s+(i.qty||1), 0);
   toast(`✅ ${currentDetailQty} عدد به سبد اضافه شد`);
-  closeProductDetail(false);
-  history.back();
+  closeProductDetail();
+}
+function shareProduct(){
+  if(!currentDetailProduct) return;
+  const p = currentDetailProduct;
+  const slug = slugify(p.name);
+  const url = window.location.origin + window.location.pathname + `#product-detail/${p.id}/${slug}`;
+  navigator.clipboard.writeText(url).then(() => {
+    toast('✅ لینک محصول کپی شد!');
+  }).catch(() => {
+    prompt('این لینک رو کپی کن:', url);
+  });
 }
 function addToCart(id){
   const p = allProducts.find(x=>x.id==id);
@@ -1107,14 +1226,10 @@ function openCart(){
   document.getElementById('step-1').style.display='block';
   document.getElementById('step-2').style.display='none';
   renderCart();
-  navigationStack.push('cart');
-  history.pushState({ page: 'cart' }, '', '#cart');
+  navigateTo('cart');
 }
-function closeCart(addToHistory = true){
+function closeCart(fromHistory = false){
   document.getElementById('cart-modal').style.display='none';
-  if (addToHistory && navigationStack[navigationStack.length - 1] === 'cart') {
-    navigationStack.pop();
-  }
 }
 function showStep2(){
   if(cart.length===0){toast('سبد خرید خالی است');return;}
@@ -1152,7 +1267,7 @@ async function finalizeOrder(platform){
   if(platform === 'telegram'){ window.open('https://t.me/' + SHOP_SETTINGS.telegram + '?text=' + enc, '_blank'); }
   else if(platform === 'whatsapp'){ const waUsername = SHOP_SETTINGS.whatsapp || 'fitforgeshop'; window.open('https://wa.me/' + waUsername + '?text=' + enc, '_blank'); }
   try { await apiCall('/orders', 'POST', {orderCode, items: cart, baseTotal, shippingTotal, discountCode: code || null, discountAmount, finalTotal, name, phone, province, city, addr, zip, platform, status: 'pending'}); } catch(e){ console.error('Order save error:', e); }
-  closeCart(false);
+  closeCart();
   cart = [];
   document.getElementById('cart-count').textContent = 0;
   toast('سفارش ثبت شد! کد: ' + orderCode);
@@ -1161,7 +1276,7 @@ function openAdminPin(){
   document.getElementById('admin-pin-modal').style.display='block';
   history.pushState({ page: 'admin-pin' }, '', '#admin-pin');
 }
-function closeAdminPin(addToHistory = true){
+function closeAdminPin(fromHistory = false){
   document.getElementById('admin-pin-modal').style.display='none';
   document.getElementById('adminPinInput').value='';
 }
@@ -1252,7 +1367,7 @@ function openProductForm(id){
   document.getElementById('product-form-modal').style.display='block';
   history.pushState({ page: 'product-form' }, '', '#product-form');
 }
-function closeProductForm(addToHistory = true){
+function closeProductForm(fromHistory = true){
   document.getElementById('product-form-modal').style.display='none';
 }
 async function saveProductForm(){
@@ -1266,7 +1381,7 @@ async function saveProductForm(){
     if(editingProductId){ await apiCall('/products/' + editingProductId, 'PUT', data); }
     else{ await apiCall('/products', 'POST', data); }
     toast('ذخیره شد');
-    closeProductForm(false);
+    closeProductForm();
     await loadProducts();
     renderAdminProducts();
     applyFilters();
@@ -1364,7 +1479,7 @@ async function checkImportStatus(){
 }
 async function runImport(){ toast('این بخش هنوز آماده نیست'); }
 async function loadProducts(){
-  const cached = localStorage.getItem('ff_products_cache_v3');
+  const cached = localStorage.getItem('ff_products_cache_v4');
   if(cached){ try{ allProducts = JSON.parse(cached); renderMainCats(); applyFilters(); renderDiscountTrack(); }catch(e){} }
   try{
     const products = await apiCall('/products');
@@ -1373,7 +1488,7 @@ async function loadProducts(){
       profitPercent: p.profitPercent, price: p.price, img: p.img, img2: p.img2,
       flavors: p.flavors, cat: p.cat, discount: p.discount, stock: p.stock, desc: p.desc
     }));
-    localStorage.setItem('ff_products_cache_v3', JSON.stringify(allProducts));
+    localStorage.setItem('ff_products_cache_v4', JSON.stringify(allProducts));
     renderMainCats(); applyFilters(); renderDiscountTrack();
   }catch(e){ console.error('API Error:', e); if(!cached) toast('⚠️ خطا در ارتباط با سرور'); }
 }
@@ -1391,7 +1506,16 @@ async function init(){
   applyFilters();
   renderDiscountTrack();
   updateSocialLinks();
-  history.replaceState({ page: 'home' }, '', '#home');
+  
+  // ===== مدیریت URL اولیه =====
+  const route = parseHash();
+  if (route.page === 'product-detail' && route.productId) {
+    // اگه URL محصول داشت، بازش کن
+    setTimeout(() => openProductDetail(route.productId, true, route.slug), 500);
+  } else {
+    handleRoute(route);
+  }
+  
   setTimeout(()=>{
     const ls=document.getElementById('loading-screen');
     if(ls){ls.classList.add('hidden');setTimeout(()=>ls.remove(),700);}
